@@ -25,13 +25,12 @@ if submitted:
         st.warning("全て入力してください")
     else:
        # 1. Storageに写真をアップロード
-file_bytes = uploaded_file.read()
-file_name = uploaded_file.name
-
-supabase.storage.from_("images").upload(
-    path=file_name,
-    file=file_bytes,
-    file_options={"content-type": uploaded_file.type, "upsert": "true"}
+        file_bytes = uploaded_file.read()
+        file_name = uploaded_file.name
+        supabase.storage.from_("images").upload(
+            path=file_name,
+            file=file_bytes,
+            file_options={"content-type": uploaded_file.type, "upsert": "true"}
 )
         
         # 2. 写真の公開URLを取得
