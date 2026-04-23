@@ -32,12 +32,12 @@ if submitted:
                 path=file_name,
                 file=file_bytes
             )
-except Exception:
+        except Exception:
     # 同名ファイルが既にある場合は上書き
-    supabase.storage.from_("images").update(
-        path=file_name,
-        file=file_bytes
-    )
+            supabase.storage.from_("images").update(
+                path=file_name,
+                file=file_bytes
+            )
         
         # 2. 写真の公開URLを取得
         image_url = supabase.storage.from_("images").get_public_url(file_name)
