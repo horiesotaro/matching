@@ -24,15 +24,15 @@ if submitted:
     if not name or not age or uploaded_file is None:
         st.warning("全て入力してください")
     else:
-        # 1. Storageに写真をアップロード
-        file_bytes = uploaded_file.read()
-        file_name = uploaded_file.name
-        
-        supabase.storage.from_("images").upload(
-            file_name,
-            file_bytes,
-            {"content-type": uploaded_file.type}
-        )
+       # 1. Storageに写真をアップロード
+file_bytes = uploaded_file.read()
+file_name = uploaded_file.name
+
+supabase.storage.from_("images").upload(
+    path=file_name,
+    file=file_bytes,
+    file_options={"content-type": uploaded_file.type, "upsert": "true"}
+)
         
         # 2. 写真の公開URLを取得
         image_url = supabase.storage.from_("images").get_public_url(file_name)
