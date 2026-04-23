@@ -1,7 +1,26 @@
 import streamlit as st
 import os
 from supabase import create_client
+import streamlit as st
 
+# パスワード保護
+PASSWORD = "48691229"  # ここを好きなパスワードに変更
+
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+if not st.session_state.authenticated:
+    st.title("ログイン")
+    pwd = st.text_input("パスワードを入力", type="password")
+    if st.button("ログイン"):
+        if pwd == PASSWORD:
+            st.session_state.authenticated = True
+            st.rerun()
+        else:
+            st.error("パスワードが違います")
+    st.stop()
+
+# ここから下が既存のコード
 # Supabase接続
 url = st.secrets["SUPABASE_URL"]
 key = st.secrets["SUPABASE_KEY"]
