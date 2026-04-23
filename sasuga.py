@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 import os
 from supabase import create_client
 
@@ -7,10 +6,6 @@ from supabase import create_client
 url = st.secrets["SUPABASE_URL"]
 key = st.secrets["SUPABASE_KEY"]
 supabase = create_client(url, key)
-
-SAVE_DIR = 'uploaded_images'
-if not os.path.exists(SAVE_DIR):
-    os.makedirs(SAVE_DIR)
 
 st.title("プロフィール")
 
@@ -29,16 +24,30 @@ if submitted:
     if not name or not age or uploaded_file is None:
         st.warning("全て入力してください")
     else:
-        # Supabaseに保存
+        # 1. Storageに写真をアップロード
+        file_bytes = uploaded_file.read()
+        file_name = uploaded_file.name
+        
+        supabase.storage.from_("images").upload(
+            file_name,
+            file_bytes,
+            {"content-type": uploaded_file.type}
+        )
+        
+        # 2. 写真の公開URLを取得
+        image_url = supabase.storage.from_("images").get_public_url(file_name)
+        
+        # 3. profilesテーブルに保存
         data = {
             "name": name,
             "sex": sex,
             "age": age,
             "mbti": mbti,
-            "image_url": uploaded_file.name
+            "image_url": image_url
         }
         supabase.table("profiles").insert(data).execute()
+        
         st.success("保存完了！")
-
+        st.image(image_url, caption=name, width=300)
 
 
