@@ -78,6 +78,10 @@ if submitted:
             "sex": sex,
             "age": age,
             "mbti": mbti,
+            "min_age": age1,
+            "max_age": age2,
+            "member_sex": sex1,
+            "adress": adress,
             "image_url": image_url
         }
         supabase.table("profiles").insert(data).execute()
