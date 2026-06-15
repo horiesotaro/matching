@@ -1,6 +1,8 @@
 streamlit
-scikit-learn
+supabase
 pandas
 numpy
-openpyxl
-supabase
+scikit-learn
+networkx
+matplotlib
+ipython
