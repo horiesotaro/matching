@@ -20,7 +20,7 @@ from IPython import embed
 # In[3]:
 
 
-mbti_df = pd.read_excel('C:\\Users\\sougo\\OneDrive\\Bookb.xlsx',index_col=0)
+mbti_df = pd.read_excel('Bookb.xlsx',index_col=0)
 mbti_df
 
 
