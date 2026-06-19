@@ -19,55 +19,23 @@ from IPython import embed
 
 mbti_df = pd.read_excel('Bookb.xlsx',index_col=0)
 
-##### print(' マッチしたい相手の性別を選択')
-print(' 男: 女: 両方: から選択して入力')
-sex=input('')
-print(' \n希望日を入力　例:6/7')
-print(' 6/7: 6/8: 6/9: から選択して入力')
-day=input('')
-print(' \n希望時間を選択')
-print(' 昼: 夜: 一日: から選択して入力')
-time=input('')
+st.title("プロフィール")
+
+with st.form("input_form"):
+
+    sex = st.selectbox('マッチしたい性別を選択', ['男', '女','両方'])
+    day = st.selectbox('希望日を選択', ['6/7', '6/8','6/9'])
+    time = st.selectbox('希望時間を選択', ['昼', '夜','一日'])
+    mbti = st.selectbox('MBTIを選択', [
+        "ISFP","ISFJ","ISTP","ISTJ","INFP","INFJ","INTP","INTJ",
+        "ESFP","ESFJ","ESTP","ESTJ","ENFP","ENFJ","ENTP","ENTJ"
+    ])
+    tension=st.selectbox('1:似たテンションの人とマッチしたい割合',range(0,10))
+    idea=st.selectbox('2:似た考えの人とマッチしたい割合',range(0,10))
+    judge=st.selectbox('3:感情的な人とマッチしたい割合',range(0,10))
+    plan=st.selectbox('4:一緒に計画を立てたいしたい割合',range(0,10))
 max1=('一日')
-print(max1)
-print(' \nMBTIを入力 例:ISTP')
-mbti=input('')
-
-print('\n以下は0～10で入力してください * 1と2の合計が10になるようにしてください')
-print('例 1:似たテンションの人とマッチしたい 6  2:異なるテンションの人とマッチしたい 4')
-
-print('\n質問A テンションについて')
-print('1:似たテンションの人とマッチしたい割合 2:異なるテンションの人とマッチしたい割合')
-print('1:似たテンションの人とマッチしたい割合')
-tension=input('')
-print(f"1:似たテンションの人とマッチしたい割合 {tension}割 ,2:異なるテンションの人とマッチしたい割合 {10-int(tension)}割")
-
-print('\n質問B 考え方について')
-print('1:似た考え方の人とマッチしたい割合 2:異なる考え方の人とマッチしたい割合')
-print('1:似た考え方の人とマッチしたい割合')
-idea=input('')
-print(f"1:似たテンションの人とマッチしたい割合 {idea}割 ,2:異なるテンションの人とマッチしたい割合 {10-int(idea)}割")
-
-print('\n質問C　判断について')
-print('1:感情的な人とマッチしたい割合 2:論理的な人とマッチしたい割合')
-print('1:感情的な人とマッチしたい割合')
-judge=input('')
-print(f"1:感情的な人とマッチしたい割合 {judge}割 ,2:論理的な人とマッチしたい割合 {10-int(judge)}割")
-
-print('\n質問D 計画について')
-print('1:一緒に計画を練りたい割合 2:その場の流れで遊びたい割合')
-print('1:一緒に計画を練りたい割合')
-plan=input('')
-print(f"1:一緒に計画を練りたい割合 {plan}割 ,2:その場の流れで遊びたい割合 {10-int(plan)}割")
-
-
-# In[83]:
-
-
 a = mbti[0:4]
-
-
-# In[84]:
 
 
 def orientation(a,tension,idea,judge,plan):
