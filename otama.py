@@ -38,10 +38,12 @@ with st.form("input_form"):
 submitted = st.form_submit_button("保存")
 
 if submitted:
-    if not name or not age or uploaded_file is None:
-        st.warning("全て入力してください")
-    else:
-        st.success("保存完了！")
+    tension=st.selectbox('1:似たテンションの人とマッチしたい割合',range(0,10))
+    idea=st.selectbox('2:似た考えの人とマッチしたい割合',range(0,10))
+    judge=st.selectbox('3:感情的な人とマッチしたい割合',range(0,10))
+    plan=st.selectbox('4:一緒に計画を立てたいしたい割合',range(0,10))
+    st.success("保存完了！")
+        
 max1=('一日')
 a = mbti[0:4]
 
