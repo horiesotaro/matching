@@ -34,15 +34,10 @@ with st.form("input_form"):
     idea=st.selectbox('2:似た考えの人とマッチしたい割合',range(0,10))
     judge=st.selectbox('3:感情的な人とマッチしたい割合',range(0,10))
     plan=st.selectbox('4:一緒に計画を立てたいしたい割合',range(0,10))
-
-submitted = st.form_submit_button("保存")
+    submitted = st.form_submit_button("保存")
 
 if submitted:
-    tension=st.selectbox('1:似たテンションの人とマッチしたい割合',range(0,10))
-    idea=st.selectbox('2:似た考えの人とマッチしたい割合',range(0,10))
-    judge=st.selectbox('3:感情的な人とマッチしたい割合',range(0,10))
-    plan=st.selectbox('4:一緒に計画を立てたいしたい割合',range(0,10))
-    st.success("保存完了！")
+    st.write("保存完了！")
         
 max1=('一日')
 a = mbti[0:4]
