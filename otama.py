@@ -17,17 +17,14 @@ import matplotlib.pyplot as plt
 from IPython import embed
 
 
-# In[3]:
-
-
-mbti_df = pd.read_excel('Bookb.xlsx',index_col=0)
+mbti_df = pd.read_excel('C:\\Users\\sougo\\OneDrive\\Bookb.xlsx',index_col=0)
 mbti_df
 
 
-# In[4]:
+# In[3]:
 
 
-print(' マッチしたい相手の性別を選択')
+##### print(' マッチしたい相手の性別を選択')
 print(' 男: 女: 両方: から選択して入力')
 sex=input('')
 print(' \n希望日を入力　例:6/7')
@@ -69,13 +66,13 @@ plan=input('')
 print(f"1:一緒に計画を練りたい割合 {plan}割 ,2:その場の流れで遊びたい割合 {10-int(plan)}割")
 
 
-# In[5]:
+# In[83]:
 
 
 a = mbti[0:4]
 
 
-# In[6]:
+# In[84]:
 
 
 def orientation(a,tension,idea,judge,plan):
@@ -99,7 +96,7 @@ def orientation(a,tension,idea,judge,plan):
     return e,i,n,s,f,t,j,p
 
 
-# In[7]:
+# In[85]:
 
 
 result0_df=(mbti_df[(mbti_df['性別'] == sex)&(mbti_df['希望日'] == day)&((mbti_df['希望時間'] == time)|(mbti_df['希望時間'] == max1))])
@@ -118,13 +115,19 @@ else:
 d_df=y_df.copy()
 
 
-# In[8]:
+# In[86]:
 
 
 d_df
 
 
-# In[9]:
+# In[136]:
+
+
+d_df.iloc[60:70,:]
+
+
+# In[87]:
 
 
 def scoring(e,i,n,s,f,t,j,p):
@@ -147,7 +150,7 @@ def scoring(e,i,n,s,f,t,j,p):
     return (ISFP,ISFJ,ISTP,ISTJ,INFP,INFJ,INTP,INTJ,ESFP,ESFJ,ESTP,ESTJ,ENFP,ENFJ,ENTP,ENTJ)
 
 
-# In[10]:
+# In[88]:
 
 
 x_df=["ISFP","ISFJ","ISTP","ISTJ","INFP","INFJ","INTP","INTJ","ESFP","ESFJ","ESTP","ESTJ","ENFP","ENFJ","ENTP","ENTJ"]
@@ -160,7 +163,7 @@ q_df=pd.concat([w_df,c_df],axis=1)
 print(q_df)
 
 
-# In[11]:
+# In[89]:
 
 
 y_df['相手への評価'] = 0
@@ -172,7 +175,7 @@ s_df=y_df.copy()
 s_df
 
 
-# In[12]:
+# In[90]:
 
 
 user0 = pd.DataFrame([[sex, day, time, mbti, tension,idea,judge,plan,0]], columns =['性別','希望日','希望時間','MBTI', 'EI', 'SN', 'TF', 'PJ', '相手への評価'])
@@ -192,20 +195,20 @@ for i in range(1,len(s_df.index)):
 s_df
 
 
-# In[13]:
+# In[91]:
 
 
 g_df=s_df.iloc[0:,8:]
 g_df
 
 
-# In[14]:
+# In[92]:
 
 
-g_df.iloc[:10,:10]
+g_df.iloc[3,0]
 
 
-# In[15]:
+# In[93]:
 
 
 import numpy as np
@@ -233,20 +236,44 @@ kid_df = df.where(mask,0)
 kid_df
 
 
-# In[16]:
+# In[94]:
+
+
+kid_df.iloc[8:10,:2]
+
+
+# In[128]:
+
+
+kid_df.iloc[60:70,7:14]
+
+
+# In[95]:
 
 
 new_df=kid_df.where(kid_df>=25,"x")
 new_df
 
 
-# In[17]:
+# In[96]:
 
 
-new_df.iloc[:10,:10]
+new_df.iloc[8:10,:2]
 
 
-# In[18]:
+# In[130]:
+
+
+new_df.iloc[60:70,7:14]
+
+
+# In[97]:
+
+
+#new_df.iloc[:10,:10]
+
+
+# In[98]:
 
 
 data23 = np.empty((0,1))
@@ -257,14 +284,14 @@ for j in range(len(new_df.index)):
 data23
 
 
-# In[19]:
+# In[99]:
 
 
 user_id = g_df.index
 print(user_id)
 
 
-# In[20]:
+# In[100]:
 
 
 from itertools import product
@@ -273,7 +300,7 @@ node_list = user_id.to_list()
 edge_list = [ (x,y) for x, y in product(node_list,node_list) ]
 
 
-# In[21]:
+# In[101]:
 
 
 datax=[]
@@ -285,102 +312,107 @@ for i in range(len(data23)):
         datax.append(edge_list[i])
 
 
-# In[22]:
+# In[132]:
 
 
-kid_df.columns=kid_df.index
+(320,76) in datax
 
 
-# In[23]:
+# In[102]:
 
 
-G = nx.Graph(nx.from_pandas_adjacency(kid_df))
+from itertools import product
 
+# Graphオブジェクトの作成
+G = nx.DiGraph()
 
-# In[24]:
+node_list = user_id.to_list()
+edge_list = [ (x,y) for x, y in product(node_list,node_list) if x != y]
 
-
+# print(edge_list)
+print(type(node_list[0]))
+# nodeデータの追加
+G.add_nodes_from(node_list)
+G.add_edges_from(datax)
 nx.draw(G, with_labels = True)
 plt.show()
 
 
-# In[25]:
+# In[103]:
 
 
-neighbors = list(G.neighbors(0))
-sub_nodes = neighbors + [0]
-subG = G.subgraph(sub_nodes)
-
-cliques = nx.find_cliques(subG)
-
-result = [c for c in cliques if len(c) == 5 and 0 in c]
-
-
-# In[26]:
+import networkx as nx
+ab=dict(enumerate(nx.bfs_layers(G,[0])))
+ac=ab[2]
+ad=ab[1]
+if(len(ab)==4):
+    ae=ab[3]
+ab
 
 
-len(result)
+# In[124]:
 
 
-# In[27]:
+ac
 
 
-result
+# In[123]:
 
 
-# In[28]:
+datayy=[]
+for m in ad:
+    neighbor1=list(G[m].keys())
+neighbor1
 
 
-id2pos = {}
-for pos, id, in enumerate(g_df.index):
-    id2pos[id] = pos
-print(id2pos)
+# In[117]:
 
 
-# In[29]:
+import networkx as nx
+ab=dict(enumerate(nx.bfs_layers(G,[0])))
+ac=ab[2]
+ad=ab[1]
+if(len(ab)==4):
+    ae=ab[3]
+
+datav=[]
+for n in ac:
+    neighbor=list(G[n].keys())
+    if 0 in neighbor:
+        datav.append(n)
+datay=[]
+for m in ad:
+    neighbor1=list(G[m].keys())
+    for n in neighbor1:
+        if n in datav:
+            datay.append((0,m,n))
+datay
 
 
-dataq=[]
-datar=[]
-for g in result:
-    for i,j in product(range(5),range(5)):
-        if i != j:
-            dataq.append(g_df.iat[id2pos[g[i]],id2pos[g[j]]])
-n=20
-for c in range(0,len(dataq),n):
-    datar.append(dataq[c:c+n])
-len(datar)
+# In[106]:
 
 
-# In[30]:
+datap = set()
+
+for m in ad:
+    for n in ad:
+        if m != n:
+            datap.add((0, min(m, n), max(m, n)))
+
+datap = list(datap)
+datap
 
 
-datai=[]
-for i in range(0,len(datar)):
-    datai.append(sum(datar[i]))
-len(datai)
+# In[61]:
 
 
-# In[31]:
+datavv=datay+datap
 
 
-o1_df=pd.DataFrame(result, columns =['あなた','user1','user2','user3','user4'])
-o2_df=pd.DataFrame(datar, columns =['user1からあなたへの評価','user2からあなたへの評価','user3からあなたへの評価','user4からあなたへの評価','あなたからuser1への評価','user2からuser1への評価','user3からuser1への評価','user4からuser1への評価','あなたからuser2への評価','user1からuser2への評価','user3からuser2への評価','user4からuser2への評価','あなたからuser3への評価','user1からuser3への評価','user2からuser3への評価','user4からuser3への評価','あなたからuser4への評価','user1からuser4への評価','user2からuser4への評価','user3からuser4への評価'])
-o_df=pd.concat([o1_df,o2_df],axis=1)
-o_df
+# In[63]:
 
 
-# In[32]:
-
-
-o_df.loc[:,['user2','user3','user4']]=np.sort(o_df.loc[:,['user2','user3','user4']].values)
-gya_df=o_df.sort_values('user2')
-
-
-# In[33]:
-
-
-gya_df=gya_df.drop_duplicates(subset=['あなた','user1','user2','user3','user4'])
+len(datavv)
 
 
 # In[ ]:
@@ -389,30 +421,111 @@ gya_df=gya_df.drop_duplicates(subset=['あなた','user1','user2','user3','user4
 
 
 
-# In[34]:
+# In[26]:
 
 
-gya_df['合計'] = 0
-gya_df['分散'] = 0
-gya_df['優劣値'] = 0
-for i in range(gya_df.shape[0]):
-    x = gya_df.iloc[i,5:25].values
+g_df.columns[3]
+
+
+# In[27]:
+
+
+id2pos = {}
+for pos, id, in enumerate(g_df.index):
+    id2pos[id] = pos
+print(id2pos)
+
+
+# In[ ]:
+
+
+
+
+
+# In[64]:
+
+
+dataq=[]
+datar=[]
+for g in datavv:
+    for i,j in product(range(3),range(3)):
+        if i != j:
+            dataq.append(g_df.iat[id2pos[g[i]],id2pos[g[j]]])
+n=6
+for c in range(0,len(dataq),n):
+    datar.append(dataq[c:c+n])
+datar
+
+
+# In[65]:
+
+
+len(dataq)
+
+
+# In[66]:
+
+
+datai=[]
+for i in range(0,len(datar)):
+    datai.append(sum(datar[i]))
+datai
+
+
+# In[71]:
+
+
+o1_df=pd.DataFrame(datavv, columns =['あなた','user1','user2'])
+o2_df=pd.DataFrame(datar, columns =['use1からあなたへの評価','use2からあなたへの評価','あなたからuser1への評価','user2からuser1への評価','あなたからuser2への評価','user1からuser2への評価'])
+o_df=pd.concat([o1_df,o2_df],axis=1)
+o_df
+
+
+# In[72]:
+
+
+o_df['合計'] = 0
+o_df['分散'] = 0
+o_df['優劣値'] = 0
+for i in range(o_df.shape[0]):
+    x = o_df.iloc[i,3:9].values
     # print(np.sum(x),np.var(x))
-    gya_df.iloc[i,25] = np.sum(x)
-    gya_df.iloc[i,26] = np.var(x)
-    gya_df.iloc[i,27] = (np.sum(x)-np.var(x))
-fin_df=gya_df.sort_values('優劣値',ascending=False)
+    o_df.iloc[i,9] = np.sum(x)
+    o_df.iloc[i,10] = np.var(x)
+    o_df.iloc[i,11] = (np.sum(x)-np.var(x))
+fin_df=o_df.sort_values('優劣値',ascending=False)
 fin_df
 
 
-# In[35]:
+# In[75]:
+
+
+user_cols = ["user1", "user2"]
+
+# 各行のユーザーをソートしてタプル化（順序を統一）
+fin_df["group_key"] = fin_df[user_cols].apply(lambda x: tuple(sorted(x)), axis=1)
+
+# 重複削除
+fin_df = fin_df.drop_duplicates(subset="group_key")
+
+# 不要なら削除
+fin_df = fin_df.drop(columns="group_key")
+
+
+# In[74]:
+
+
+fin_df.head(10)
+
+
+# In[76]:
 
 
 used_nums = set()
 selected_indices = []
 
 # 対象とする列のリスト
-target_cols = ['user1', 'user2', 'user3', 'user4']
+target_cols = ['user1', 'user2']
 
 for idx, row in fin_df.iterrows():
     # その行のユーザーたちの数値を取得
@@ -430,12 +543,18 @@ for idx, row in fin_df.iterrows():
 unique_rows0_df = fin_df.loc[selected_indices]
 
 
-# In[36]:
+# In[137]:
 
 
-unique_rows0_df
+unique_rows0_df.iloc[:10,:]
 
 
 # In[ ]:
+
+
+
+
+
+
 
 
