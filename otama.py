@@ -18,11 +18,6 @@ from IPython import embed
 
 
 mbti_df = pd.read_excel('Bookb.xlsx',index_col=0)
-mbti_df
-
-
-# In[3]:
-
 
 ##### print(' マッチしたい相手の性別を選択')
 print(' 男: 女: 両方: から選択して入力')
@@ -114,20 +109,6 @@ else:
     y_df=result0_df
 d_df=y_df.copy()
 
-
-# In[86]:
-
-
-d_df
-
-
-# In[136]:
-
-
-d_df.iloc[60:70,:]
-
-
-# In[87]:
 
 
 def scoring(e,i,n,s,f,t,j,p):
