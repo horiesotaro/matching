@@ -323,9 +323,9 @@ for i in range(gya_df.shape[0]):
     x = gya_df.iloc[i, 4:16].values
     
     # 計算結果を .iat を使って確実に行・列に代入
-    o_df.iat[i, 16] = float(np.sum(x))       # 合計
-    o_df.iat[i, 17] = float(np.var(x))      # 分散
-    o_df.iat[i, 18] = float(np.sum(x) - np.var(x))  # 優劣値
+    gya_df.iat[i, 16] = float(np.sum(x))       # 合計
+    gya_df.iat[i, 17] = float(np.var(x))      # 分散
+    gya_df.iat[i, 18] = float(np.sum(x) - np.var(x))  # 優劣値
 
 # 3. 並び替え
 fin_df = gya_df.sort_values('優劣値', ascending=False)
