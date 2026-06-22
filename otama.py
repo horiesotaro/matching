@@ -114,7 +114,7 @@ w_df=pd.DataFrame(x_df, columns = ["MBTI"])
 e_df = scoring(e,i,n,s,f,t,j,p)
 c_df=pd.DataFrame(e_df, columns = ["相手への評価"])
 q_df=pd.concat([w_df,c_df],axis=1)
-print(q_df)
+
 
 
 # In[89]:
@@ -126,7 +126,7 @@ for i in range(y_df.shape[0]):
     mbti2 = y_df.iloc[i,3]
     y_df.iloc[i,8]=q_df[q_df['MBTI'] == mbti2].loc[:,'相手への評価'].values[0]
 s_df=y_df.copy()
-s_df
+
 
 
 # In[90]:
@@ -146,20 +146,17 @@ for i in range(1,len(s_df.index)):
         else:
             s_df.iloc[j,i+8] = p_e_df[x_df.index(s_df.iloc[j,3])]
             
-s_df
 
 
 # In[91]:
 
 
 g_df=s_df.iloc[0:,8:]
-g_df
 
 
 # In[92]:
 
 
-g_df.iloc[3,0]
 
 
 # In[93]:
@@ -187,7 +184,6 @@ for x in range(n):
 # 条件を満たす部分だけ残す（他はNaN）
 kid_df = df.where(mask,0)
 
-kid_df
 
 
 # In[94]:
@@ -199,32 +195,21 @@ kid_df.iloc[8:10,:2]
 # In[128]:
 
 
-kid_df.iloc[60:70,7:14]
 
 
 # In[95]:
 
 
 new_df=kid_df.where(kid_df>=25,"x")
-new_df
+
 
 
 # In[96]:
 
 
-new_df.iloc[8:10,:2]
 
 
-# In[130]:
 
-
-new_df.iloc[60:70,7:14]
-
-
-# In[97]:
-
-
-#new_df.iloc[:10,:10]
 
 
 # In[98]:
@@ -235,14 +220,13 @@ for j in range(len(new_df.index)):
     v3_df=new_df.iloc[0:,j:j+1]
     # print(v3_df.values.shape)
     data23 = np.vstack((data23,v3_df.values))
-data23
+
 
 
 # In[99]:
 
 
 user_id = g_df.index
-print(user_id)
 
 
 # In[100]:
@@ -301,13 +285,13 @@ ac=ab[2]
 ad=ab[1]
 if(len(ab)==4):
     ae=ab[3]
-ab
+
 
 
 # In[124]:
 
 
-ac
+
 
 
 # In[123]:
@@ -316,7 +300,6 @@ ac
 datayy=[]
 for m in ad:
     neighbor1=list(G[m].keys())
-neighbor1
 
 
 # In[117]:
@@ -340,7 +323,7 @@ for m in ad:
     for n in neighbor1:
         if n in datav:
             datay.append((0,m,n))
-datay
+
 
 
 # In[106]:
@@ -354,7 +337,7 @@ for m in ad:
             datap.add((0, min(m, n), max(m, n)))
 
 datap = list(datap)
-datap
+
 
 
 # In[61]:
@@ -366,7 +349,7 @@ datavv=datay+datap
 # In[63]:
 
 
-len(datavv)
+
 
 
 # In[ ]:
@@ -378,7 +361,7 @@ len(datavv)
 # In[26]:
 
 
-g_df.columns[3]
+
 
 
 # In[27]:
@@ -387,7 +370,7 @@ g_df.columns[3]
 id2pos = {}
 for pos, id, in enumerate(g_df.index):
     id2pos[id] = pos
-print(id2pos)
+
 
 
 # In[ ]:
@@ -408,7 +391,7 @@ for g in datavv:
 n=6
 for c in range(0,len(dataq),n):
     datar.append(dataq[c:c+n])
-datar
+
 
 
 # In[65]:
@@ -423,7 +406,7 @@ len(dataq)
 datai=[]
 for i in range(0,len(datar)):
     datai.append(sum(datar[i]))
-datai
+
 
 
 # In[71]:
@@ -432,7 +415,6 @@ datai
 o1_df=pd.DataFrame(datavv, columns =['あなた','user1','user2'])
 o2_df=pd.DataFrame(datar, columns =['use1からあなたへの評価','use2からあなたへの評価','あなたからuser1への評価','user2からuser1への評価','あなたからuser2への評価','user1からuser2への評価'])
 o_df=pd.concat([o1_df,o2_df],axis=1)
-o_df
 
 
 # In[72]:
@@ -448,7 +430,7 @@ for i in range(o_df.shape[0]):
     o_df.iloc[i,10] = np.var(x)
     o_df.iloc[i,11] = (np.sum(x)-np.var(x))
 fin_df=o_df.sort_values('優劣値',ascending=False)
-fin_df
+
 
 
 # In[75]:
@@ -469,7 +451,7 @@ fin_df = fin_df.drop(columns="group_key")
 # In[74]:
 
 
-fin_df.head(10)
+
 
 
 # In[76]:
