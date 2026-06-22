@@ -489,8 +489,9 @@ unique_rows0_df = fin_df.loc[selected_indices]
 # In[137]:
 
 
-unique_rows0_df.iloc[:10,:]
-
+a=unique_rows0_df.iloc[0,1]
+b=unique_rows0_df.iloc[0,2]
+print(f"あなたは{a}さん、{b}さんとマッチしました")
 
 # In[ ]:
 
