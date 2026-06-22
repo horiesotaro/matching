@@ -493,6 +493,13 @@ a=unique_rows0_df.iloc[0,1]
 b=unique_rows0_df.iloc[0,2]
 st.text(f"あなたは{a}さん、{b}さんとマッチしました")
 
+st.text(f"{a}さんの詳細")
+c=mbti_df.iloc[a-1,0:4]
+st.text(c)
+st.text("")
+st.text(f"{b}さんの詳細")
+d=mbti_df.iloc[b-1,0:4]
+st.text(d)
 
 # In[ ]:
 
