@@ -422,11 +422,14 @@ o_df=pd.concat([o1_df,o2_df],axis=1)
 o_df['合計'] = 0
 o_df['分散'] = 0
 o_df['優劣値'] = 0
+# 【追加】10番目と11番目の列を、あらかじめ小数（float）を受け付ける型に変えておく
+o_df.iloc[:, 10] = o_df.iloc[:, 10].astype(float)
+o_df.iloc[:, 11] = o_df.iloc[:, 11].astype(float)
 for i in range(o_df.shape[0]):
     x = o_df.iloc[i,3:9].values
     # print(np.sum(x),np.var(x))
     o_df.iloc[i,9] = np.sum(x)
-    o_df.iloc[i,10] = int(np.var(x))
+    o_df.iloc[i,10] = np.var(x)
     o_df.iloc[i,11] = (np.sum(x)-np.var(x))
 fin_df=o_df.sort_values('優劣値',ascending=False)
 
