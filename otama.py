@@ -487,7 +487,7 @@ unique_rows0_df = fin_df.loc[selected_indices]
 
 
 # In[137]:
-
+unique_rows0_df
 
 a=unique_rows0_df.iloc[0,1]
 b=unique_rows0_df.iloc[0,2]
