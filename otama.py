@@ -491,7 +491,8 @@ unique_rows0_df
 
 a=unique_rows0_df.iloc[0,1]
 b=unique_rows0_df.iloc[0,2]
-print(f"あなたは{a}さん、{b}さんとマッチしました")
+st.text(f"あなたは{a}さん、{b}さんとマッチしました")
+
 
 # In[ ]:
 
