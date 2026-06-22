@@ -189,7 +189,6 @@ kid_df = df.where(mask,0)
 # In[94]:
 
 
-kid_df.iloc[8:10,:2]
 
 
 # In[128]:
