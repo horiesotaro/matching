@@ -419,20 +419,25 @@ o_df=pd.concat([o1_df,o2_df],axis=1)
 # In[72]:
 
 
-o_df['合計'] = 0
-o_df['分散'] = 0
-o_df['優劣値'] = 0
-# 【追加】10番目と11番目の列を、あらかじめ小数（float）を受け付ける型に変えておく
-o_df.values[:, 10] = o_df.values[:, 10].astype(float)
-o_df.values[:, 11] = o_df.values[:, 11].astype(float)
-for i in range(o_df.shape[0]):
-    x = o_df.iloc[i,3:9].values
-    # print(np.sum(x),np.var(x))
-    o_df.values[i,9] = np.sum(x)
-    o_df.values[i,10] = float(np.var(x))
-    o_df.values[i,11] = float((np.sum(x)-np.var(x)))
-fin_df=o_df.sort_values('優劣値',ascending=False)
+import numpy as np
 
+# 1. 初期化（大文字・小文字の表記ミスを防ぐため o_df に統一）
+o_df['合計'] = 0.0
+o_df['分散'] = 0.0
+o_df['優劣値'] = 0.0
+
+# 2. ループ処理による計算と格納
+for i in range(o_df.shape[0]):
+    # 3列目から8列目（インデックス3〜8）の値を取得
+    x = o_df.iloc[i, 3:9].values
+    
+    # 計算結果を .iat を使って確実に行・列に代入
+    o_df.iat[i, 9] = float(np.sum(x))       # 合計
+    o_df.iat[i, 10] = float(np.var(x))      # 分散
+    o_df.iat[i, 11] = float(np.sum(x) - np.var(x))  # 優劣値
+
+# 3. 並び替え
+fin_df = o_df.sort_values('優劣値', ascending=False)
 
 
 # In[75]:
