@@ -428,9 +428,9 @@ o_df.iloc[:, 11] = o_df.iloc[:, 11].astype(float)
 for i in range(o_df.shape[0]):
     x = o_df.iloc[i,3:9].values
     # print(np.sum(x),np.var(x))
-    o_df.iloc[i,9] = np.sum(x)
-    o_df.iloc[i,10] = float(np.var(x))
-    o_df.iloc[i,11] = float((np.sum(x)-np.var(x)))
+    o_df.values[i,9] = np.sum(x)
+    o_df.values[i,10] = float(np.var(x))
+    o_df.values[i,11] = float((np.sum(x)-np.var(x)))
 fin_df=o_df.sort_values('優劣値',ascending=False)
 
 
