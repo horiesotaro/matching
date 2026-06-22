@@ -30,10 +30,10 @@ with st.form("input_form"):
         "ISFP","ISFJ","ISTP","ISTJ","INFP","INFJ","INTP","INTJ",
         "ESFP","ESFJ","ESTP","ESTJ","ENFP","ENFJ","ENTP","ENTJ"
     ])
-    tension=st.selectbox('1:似たテンションの人とマッチしたい割合',range(0,10))
-    idea=st.selectbox('2:似た考えの人とマッチしたい割合',range(0,10))
-    judge=st.selectbox('3:感情的な人とマッチしたい割合',range(0,10))
-    plan=st.selectbox('4:一緒に計画を立てたいしたい割合',range(0,10))
+    tension=st.selectbox('1:似たテンションの人とマッチしたい割合',range(0,11))
+    idea=st.selectbox('2:似た考えの人とマッチしたい割合',range(0,11))
+    judge=st.selectbox('3:感情的な人とマッチしたい割合',range(0,11))
+    plan=st.selectbox('4:一緒に計画を立てたいしたい割合',range(0,11))
     submitted = st.form_submit_button("保存")
 
 if submitted:
