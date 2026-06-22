@@ -423,8 +423,8 @@ o_df['合計'] = 0
 o_df['分散'] = 0
 o_df['優劣値'] = 0
 # 【追加】10番目と11番目の列を、あらかじめ小数（float）を受け付ける型に変えておく
-o_df.iloc[:, 10] = o_df.iloc[:, 10].astype(float)
-o_df.iloc[:, 11] = o_df.iloc[:, 11].astype(float)
+o_df.values[:, 10] = o_df.values[:, 10].astype(float)
+o_df.values[:, 11] = o_df.values[:, 11].astype(float)
 for i in range(o_df.shape[0]):
     x = o_df.iloc[i,3:9].values
     # print(np.sum(x),np.var(x))
