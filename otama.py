@@ -25,82 +25,82 @@ with st.form("input_form"):
 
     sex = st.selectbox('マッチしたい性別を選択', ['男', '女','両方'])
     day = st.selectbox('希望日を選択', ['6/7', '6/8','6/9'])
-    time = st.selectbox('希望時間を選択', ['昼', '夜','一日'])
+    time = st.selectbox('希望時間を選択', ['昼', '夜'])
     mbti = st.selectbox('MBTIを選択', [
         "ISFP","ISFJ","ISTP","ISTJ","INFP","INFJ","INTP","INTJ",
         "ESFP","ESFJ","ESTP","ESTJ","ENFP","ENFJ","ENTP","ENTJ"
     ])
-    tension=st.selectbox('1:似たテンションの人とマッチしたい割合',range(0,11))
-    idea=st.selectbox('2:似た考えの人とマッチしたい割合',range(0,11))
-    judge=st.selectbox('3:感情的な人とマッチしたい割合',range(0,11))
-    plan=st.selectbox('4:一緒に計画を立てたいしたい割合',range(0,11))
+    st.text('\n以下は1～5を選択してください')
+    st.text('1:全くそう思わない 2:そう思わない　3:どちらでもない 4:そう思う 5:とてもそう思う')
+    tension=st.selectbox('1:同じようなテンション感の人と遊びたい',range(1,6))
+    idea=st.selectbox('2:似た考え方の人と遊びたい',range(1,6))
+    judge=st.selectbox('3:協調性が高い人or思考力が高い人と遊びたい',range(1,6))
+    st.text('1:協調性が高い人 2:やや協調性寄り　3:どちらでもない 4:やや思考力寄り 5:思考力が高い人')
+    plan=st.selectbox('4:前々からみんなでしっかり計画を練りたいorその場の流れで遊びたい',range(1,6))
+    st.text('1:綿密な計画を決めておきたい 2:やや1寄り　3:行く場所くらいは決めたい 4:やや5寄り 5:時間と集合場所だけでOK')
     submitted = st.form_submit_button("保存")
 
 if submitted:
     st.write("保存完了！")
         
-max1=('一日')
 a = mbti[0:4]
 
 
 def orientation(a,tension,idea,judge,plan):
     if a[0]=='E':
         e=int(tension)
-        i=10-int(tension)
+        i=6-int(tension)
     else:
         i=int(tension)
-        e=10-int(tension)
+        e=6-int(tension)
     if a[1]=='N':
         n=int(idea)
-        s=10-int(idea)
+        s=6-int(idea)
     else:
         s=int(idea)
-        n=10-int(idea)
+        n=6-int(idea)
         
-    f=int(judge)
-    t=10-int(judge)
-    j=int(plan)
-    p=10-int(plan)
-    return e,i,n,s,f,t,j,p
+    t=int(judge)
+    f=6-int(judge)
+    p=int(plan)
+    j=6-int(plan)
+    return e,i,n,s,t,f,p,j
 
 
 # In[85]:
 
 
-result0_df=(mbti_df[(mbti_df['性別'] == sex)&(mbti_df['希望日'] == day)&((mbti_df['希望時間'] == time)|(mbti_df['希望時間'] == max1))])
-result1_df=(mbti_df[(mbti_df['希望日'] == day)&((mbti_df['希望時間'] == time)|(mbti_df['希望時間'] == max1))])#性別両方
-result2_df=(mbti_df[(mbti_df['性別'] == sex)&(mbti_df['希望日'] == day)]) #希望時間一日
-result3_df=(mbti_df[(mbti_df['希望日'] == day)]) #性別両方かつ希望時間一日
-#ここにif文を入れる
-if (sex=='両方')&(time=='一日'):
-    y_df=result3_df
-elif (time=='一日'):
-    y_df=result2_df
-elif (sex=='両方'):
+result0_df=(mbti_df[(mbti_df['性別'] == sex)&(mbti_df['希望日'] == day)&((mbti_df['希望時間'] == time))])
+result1_df=(mbti_df[(mbti_df['希望日'] == day)&((mbti_df['希望時間'] == time))])
+
+if (sex=='両方'):
     y_df=result1_df
 else:
     y_df=result0_df
 d_df=y_df.copy()
 
+# 各MBTIの人数をカウントする
+mbti_counts = d_df['MBTI'].value_counts()
 
 
-def scoring(e,i,n,s,f,t,j,p):
-    ISFP=i+s+f+p
-    ISFJ=i+s+f+j
-    ISTP=i+s+t+p
-    ISTJ=i+s+t+j
-    INFP=i+n+f+p
-    INFJ=i+n+f+j
-    INTP=i+n+t+p
-    INTJ=i+n+t+j
-    ESFP=e+s+f+p
-    ESFJ=e+s+f+j
-    ESTP=e+s+t+p
-    ESTJ=e+s+t+j
-    ENFP=e+n+f+p
-    ENFJ=e+n+f+j
-    ENTP=e+n+t+p
-    ENTJ=e+n+t+j
+
+def scoring(e,i,n,s,t,f,p,j):
+    ISFP=(i+s+f+p)*2
+    ISFJ=(i+s+f+j)*2
+    ISTP=(i+s+t+p)*2
+    ISTJ=(i+s+t+j)*2
+    INFP=(i+n+f+p)*2
+    INFJ=(i+n+f+j)*2
+    INTP=(i+n+t+p)*2
+    INTJ=(i+n+t+j)*2
+    ESFP=(e+s+f+p)*2
+    ESFJ=(e+s+f+j)*2
+    ESTP=(e+s+t+p)*2
+    ESTJ=(e+s+t+j)*2
+    ENFP=(e+n+f+p)*2
+    ENFJ=(e+n+f+j)*2
+    ENTP=(e+n+t+p)*2
+    ENTJ=(e+n+t+j)*2
     return (ISFP,ISFJ,ISTP,ISTJ,INFP,INFJ,INTP,INTJ,ESFP,ESFJ,ESTP,ESTJ,ENFP,ENFJ,ENTP,ENTJ)
 
 
@@ -110,14 +110,46 @@ def scoring(e,i,n,s,f,t,j,p):
 x_df=["ISFP","ISFJ","ISTP","ISTJ","INFP","INFJ","INTP","INTJ","ESFP","ESFJ","ESTP","ESTJ","ENFP","ENFJ","ENTP","ENTJ"]
 w_df=pd.DataFrame(x_df, columns = ["MBTI"])
 # e_df=(ISFP,ISFJ,ISTP,ISTJ,INFP,INFJ,INTP,INTJ,ESFP,ESFJ,ESTP,ESTJ,ENFP,ENFJ,ENTP,ENTJ)
-(e,i,n,s,f,t,j,p)=orientation(a,tension,idea,judge,plan)
-e_df = scoring(e,i,n,s,f,t,j,p)
+(e,i,n,s,t,f,p,j)=orientation(a,tension,idea,judge,plan)
+e_df = scoring(e,i,n,s,t,f,p,j)
+aaa=scoring(e,i,n,s,t,f,p,j)
 c_df=pd.DataFrame(e_df, columns = ["相手への評価"])
 q_df=pd.concat([w_df,c_df],axis=1)
+datacd=[]
+for i in range(16):
+    if aaa[i]>=24:
+        datacd.append(x_df[i])
+impo=len(datacd)
+
+# 1. まずd_dfからMBTIの人数を集計してデータフレームにする
+mbti_counts = d_df['MBTI'].value_counts().reset_index()
+mbti_counts.columns = ['MBTI', '人数']
+
+# 2. 集計結果と q_df を結合する
+summary_df = pd.merge(q_df, mbti_counts, on='MBTI', how='left')
 
 
+# 1. 相手への評価が24以上のMBTIのリストを取得する
+target_mbti = q_df[q_df['相手への評価'] >= 24]['MBTI'].tolist()
 
-# In[89]:
+# 2. d_dfの中で、そのMBTIリストに含まれるユーザー（行）の数をカウントする
+total_users = d_df['MBTI'].isin(target_mbti).sum()
+a=(total_users)/(len(d_df))
+
+if a>=0.86:
+    bbq=28
+elif (a>=0.71)and(a<0.86):
+    bbq=26
+elif (a>=0.56)and(a<0.71):
+    bbq=24
+elif (a>=0.41)and(a<0.56):
+    bbq=22
+elif (a>=0.26)and(a<0.41):
+    bbq=20
+elif (a>=0.11)and(a<0.26):
+    bbq=18
+else:
+    bbq=16
 
 
 y_df['相手への評価'] = 0
@@ -164,25 +196,37 @@ g_df=s_df.iloc[0:,8:]
 
 import numpy as np
 import pandas as pd
-
 df = g_df.copy()
 
 # 空のマスク（全部False）
 mask = pd.DataFrame(False, index=df.index, columns=df.columns)
 
+
 n = len(df)
 
 for x in range(n):
     for y in range(n):
-        if x!=y:
+        if x != y:
             a = df.iloc[x, y]
             b = df.iloc[y, x]
-            if (a >= 15 and b >= 15 ) and (a >= 25 or b >= 25):
-                mask.iloc[x, y] = True
-                mask.iloc[y, x] = True
+            
+            # 1行目（x=0）または1列目（y=0）が絡む場合
+            if x == 0 or y == 0:
+                # 一方が24以上、もう一方が（bbq）以上なら残す
+                if (a >= 24 and b >= bbq) or (a >= bbq and b >= 24):
+                    mask.iloc[x, y] = True
+                    mask.iloc[y, x] = True
+            
+            # 1行目、1列目以外の一般のデータの場合
+            else:
+                # お互いに24以上（24以上で統一）なら残す
+                if a >= 24 and b >= 24:
+                    mask.iloc[x, y] = True
+                    mask.iloc[y, x] = True
 
-# 条件を満たす部分だけ残す（他はNaN）
-kid_df = df.where(mask,0)
+# 条件を満たす部分だけ残す
+kid_df = df.where(mask, 0)
+
 
 
 
@@ -332,7 +376,9 @@ datap = set()
 
 for m in ad:
     for n in ad:
-        if m != n:
+        neighbor1=list(G[m].keys())
+        neighbor2=list(G[n].keys())
+        if (m != n)and(m in neighbor2)and(n in neighbor1):
             datap.add((0, min(m, n), max(m, n)))
 
 datap = list(datap)
