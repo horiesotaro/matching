@@ -161,8 +161,6 @@ for i in range(y_df.shape[0]):
     mbti2 = y_df.iloc[i,3]
     y_df.iloc[i,8]=q_df[q_df['MBTI'] == mbti2].loc[:,'相手への評価'].values[0]
 s_df=y_df.copy()
-s_df
-
 
 # In[90]:
 
