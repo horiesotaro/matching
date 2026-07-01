@@ -129,7 +129,7 @@ mbti_counts.columns = ['MBTI', '人数']
 summary_df = pd.merge(q_df, mbti_counts, on='MBTI', how='left')
 
 
- 1. 相手への評価が24以上のMBTIのリストを取得する
+ #1. 相手への評価が24以上のMBTIのリストを取得する
 if max(aaa)>=28:
     target_mbti = q_df[q_df['相手への評価'] >= 28]['MBTI'].tolist()
 else:
