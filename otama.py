@@ -129,27 +129,30 @@ mbti_counts.columns = ['MBTI', '人数']
 summary_df = pd.merge(q_df, mbti_counts, on='MBTI', how='left')
 
 
-# 1. 相手への評価が24以上のMBTIのリストを取得する
-target_mbti = q_df[q_df['相手への評価'] >= 24]['MBTI'].tolist()
+ 1. 相手への評価が24以上のMBTIのリストを取得する
+if max(aaa)>=28:
+    target_mbti = q_df[q_df['相手への評価'] >= 28]['MBTI'].tolist()
+else:
+    target_mbti = q_df[q_df['相手への評価'] >= (max(aaa))]['MBTI'].tolist()
 
 # 2. d_dfの中で、そのMBTIリストに含まれるユーザー（行）の数をカウントする
 total_users = d_df['MBTI'].isin(target_mbti).sum()
+
+print(f"相手への評価が28or MAX以上のMBTIに属するユーザーの合計人数: {total_users}人")
+
 a=(total_users)/(len(d_df))
 
 if a>=0.86:
-    bbq=28
+    bbq=32
 elif (a>=0.71)and(a<0.86):
-    bbq=26
+    bbq=30
 elif (a>=0.56)and(a<0.71):
-    bbq=24
+    bbq=28
 elif (a>=0.41)and(a<0.56):
-    bbq=22
-elif (a>=0.26)and(a<0.41):
-    bbq=20
-elif (a>=0.11)and(a<0.26):
-    bbq=18
+    bbq=26
 else:
-    bbq=16
+    bbq=24
+print(bbq) 
 
 
 y_df['相手への評価'] = 0
@@ -196,6 +199,7 @@ g_df=s_df.iloc[0:,8:]
 
 import numpy as np
 import pandas as pd
+
 df = g_df.copy()
 
 # 空のマスク（全部False）
@@ -209,23 +213,80 @@ for x in range(n):
         if x != y:
             a = df.iloc[x, y]
             b = df.iloc[y, x]
-            
-            # 1行目（x=0）または1列目（y=0）が絡む場合
-            if x == 0 or y == 0:
+
+            if(max(aaa)>=28):
+                # 1行目（x=0）または1列目（y=0）が絡む場合
+                if y == 0:
                 # 一方が24以上、もう一方が（bbq）以上なら残す
-                if (a >= 24 and b >= bbq) or (a >= bbq and b >= 24):
-                    mask.iloc[x, y] = True
-                    mask.iloc[y, x] = True
+                    if (a >= 28 and b >= bbq):
+                        mask.iloc[x, y] = True
+                        mask.iloc[y, x] = True
+                elif x == 0:
+                    if (b >= 28 and a >= bbq):
+                        mask.iloc[x, y] = True
+                        mask.iloc[y, x] = True
+                
             
             # 1行目、1列目以外の一般のデータの場合
-            else:
-                # お互いに24以上（24以上で統一）なら残す
-                if a >= 24 and b >= 24:
-                    mask.iloc[x, y] = True
-                    mask.iloc[y, x] = True
+                else:
+                # お互いに28以上（28以上で統一）なら残す
+                    if max(a,b)>=28 and min(a,b)>=24:
+                        mask.iloc[x, y] = True
+                        mask.iloc[y, x] = True
+                        
+                        
+            if(max(aaa)<28):
+                if y == 0:
+                # 一方が24以上、もう一方が（bbq）以上なら残す
+                    if (a >= max(aaa) and b >= bbq):
+                        mask.iloc[x, y] = True
+                        mask.iloc[y, x] = True
+                elif x == 0:
+                    if (b >= max(aaa) and a >= bbq):
+                        mask.iloc[x, y] = True
+                        mask.iloc[y, x] = True
+                
+            
+            # 1行目、1列目以外の一般のデータの場合
+                else:
+                # お互いに28以上（28以上で統一）なら残す
+                    if max(a,b)>=28 and min(a,b)>=24:
+                        mask.iloc[x, y] = True
+                        mask.iloc[y, x] = True
+                            
+                            
 
 # 条件を満たす部分だけ残す
 kid_df = df.where(mask, 0)
+
+
+# 1. 元のデータフレームをコピーしてベースを作成
+new_df = kid_df.copy()
+
+# 2. 条件分岐
+if max(aaa) < 28:
+    # --- max(aaa)が28未満の時 ---
+    
+    # 1行目 (indexが0) または 1列目 (columnsの最初) の条件マスク
+    # ※お使いのデータのインデックス名/カラム名に合わせて指定してください
+    row0_mask = new_df.index == new_df.index[0]
+    col0_mask = new_df.columns == new_df.columns[0]
+    is_first_row_or_col = row0_mask[:, None] | col0_mask[None, :]
+    
+    # 条件A: 1行目・1列目で、値が max(aaa) 未満
+    mask_a = is_first_row_or_col & (new_df < max(aaa))
+    
+    # 条件B: それ以外（1行目・1列目ではない）で、値が 28 未満
+    mask_b = ~is_first_row_or_col & (new_df < 28)
+    
+    # 両方の条件を結合し、当てはまる場所を "x" に置換
+    final_mask = mask_a | mask_b
+    new_df = new_df.mask(final_mask, "x")
+
+else:
+    # --- max(aaa)が28以上の時 ---
+    # 全ての行列で28未満の数字に "x"
+    new_df = new_df.mask(new_df < 28, "x")
 
 
 
@@ -241,9 +302,6 @@ kid_df = df.where(mask, 0)
 
 
 # In[95]:
-
-
-new_df=kid_df.where(kid_df>=25,"x")
 
 
 
