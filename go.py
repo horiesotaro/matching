@@ -457,15 +457,15 @@ d=unique_rows_df.iloc[0,4]
 st.text(f"あなたは{a}さん、{b}さん、{c}さん,{d}さんとマッチしました")
 
 st.text(f"{a}さんの詳細")
-d=mbti_df.iloc[a-1,0:4]
-st.text(d)
+e=mbti_df.iloc[a-1,0:4]
+st.text(e)
 st.text("")
 st.text(f"{b}さんの詳細")
-e=mbti_df.iloc[b-1,0:4]
-st.text(e)
-st.text(f"{c}さんの詳細")
-f=mbti_df.iloc[c-1,0:4]
+f=mbti_df.iloc[b-1,0:4]
 st.text(f)
-st.text(f"{d}さんの詳細")
-g=mbti_df.iloc[d-1,0:4]
+st.text(f"{c}さんの詳細")
+g=mbti_df.iloc[c-1,0:4]
 st.text(g)
+st.text(f"{d}さんの詳細")
+h=mbti_df.iloc[d-1,0:4]
+st.text(h)
