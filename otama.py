@@ -18,7 +18,6 @@ from IPython import embed
 
 
 mbti_df = pd.read_excel('Bookb.xlsx',index_col=0)
-mbti_df
 
 st.title("プロフィール")
 
@@ -82,7 +81,6 @@ d_df=y_df.copy()
 
 # 各MBTIの人数をカウントする
 mbti_counts = d_df['MBTI'].value_counts()
-mbti_counts
 
 
 def scoring(e,i,n,s,t,f,p,j):
@@ -128,7 +126,6 @@ mbti_counts.columns = ['MBTI', '人数']
 
 # 2. 集計結果と q_df を結合する
 summary_df = pd.merge(q_df, mbti_counts, on='MBTI', how='left')
-summary_df
 
  #1. 相手への評価が24以上のMBTIのリストを取得する
 if max(aaa)>=28:
