@@ -427,7 +427,7 @@ last_df=pd.DataFrame(dataw)
 cols = last_df.columns.difference([ '分散', '優劣値'])
 
 last_df[cols] = last_df[cols].round().astype(int)
-# In[75]:
+
 used_nums = set()
 selected_indices = []
 
