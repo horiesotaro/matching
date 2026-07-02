@@ -135,6 +135,8 @@ total_users = d_df['MBTI'].isin(target_mbti).sum()
 
 print(f"相手への評価が28or MAX以上のMBTIに属するユーザーの合計人数: {total_users}人")
 
+total_users
+len(d_df)
 a=(total_users)/(len(d_df))
 a
 
