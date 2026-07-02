@@ -427,6 +427,7 @@ for i in range(0,len(fin_df)):
       
       
 last_df=pd.DataFrame(dataw)
+last_df
 cols = last_df.columns.difference([ '分散', '優劣値'])
 
 last_df[cols] = last_df[cols].round().astype(int)
