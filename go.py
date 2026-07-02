@@ -183,7 +183,7 @@ w_df=s_df.iloc[0:,8:]
 w_df.columns=w_df.index
 kids_df=w_df
 # In[92]:
-
+kid_df
 
 
 
@@ -266,7 +266,7 @@ kid_df = df.where(mask, 0)
 
 # 1. 元のデータフレームをコピーしてベースを作成
 new_df = kid_df.copy()
-
+new_df
 # 2. 条件分岐
 if max(aaa) < 28:
     # --- max(aaa)が28未満の時 ---
@@ -414,6 +414,7 @@ for i in range(gya_df.shape[0]):
     gya_df.iloc[i,26] = float(np.var(x))
     gya_df.iloc[i,27] = float((np.sum(x)-np.var(x)))
 fin_df=gya_df.sort_values('優劣値',ascending=False)
+fin_df
 
 dataw=[]
 for i in range(0,len(fin_df)):
