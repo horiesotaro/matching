@@ -182,7 +182,6 @@ for i in range(1,len(s_df.index)):
 w_df=s_df.iloc[0:,8:]
 w_df.columns=w_df.index
 kids_df=w_df
-kids_df
 
 
 
@@ -396,7 +395,7 @@ for i in range(0,len(datar)):
 o1_df=pd.DataFrame(result, columns =['あなた','user1','user2','user3','user4'])
 o2_df=pd.DataFrame(datar, columns =['user1からあなたへの評価','user2からあなたへの評価','user3からあなたへの評価','user4からあなたへの評価','あなたからuser1への評価','user2からuser1への評価','user3からuser1への評価','user4からuser1への評価','あなたからuser2への評価','user1からuser2への評価','user3からuser2への評価','user4からuser2への評価','あなたからuser3への評価','user1からuser3への評価','user2からuser3への評価','user4からuser3への評価','あなたからuser4への評価','user1からuser4への評価','user2からuser4への評価','user3からuser4への評価'])
 o_df=pd.concat([o1_df,o2_df],axis=1)
-
+o_df
 o_df.loc[:,['user2','user3','user4']]=np.sort(o_df.loc[:,['user2','user3','user4']].values)
 gya_df=o_df.sort_values('user2')
 # In[72]:
