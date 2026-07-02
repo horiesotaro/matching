@@ -138,7 +138,7 @@ print(f"相手への評価が28or MAX以上のMBTIに属するユーザーの合
 total_users
 len(d_df)
 a=(total_users)/(len(d_df))
-a
+
 
 
 if a>=0.86:
@@ -152,7 +152,6 @@ elif (a>=0.41)and(a<0.56):
 else:
     bbq=24
 print(bbq) 
-bbq
 
 
 y_df['相手への評価'] = 0
@@ -360,7 +359,6 @@ for c in cliques:
         for sub in combinations(c, 5):
             if 0 in sub:
                 result.append(list(sorted(sub)))
-result
 
 id2pos = {}
 for pos, id, in enumerate(w_df.index):
@@ -416,7 +414,7 @@ for i in range(gya_df.shape[0]):
     gya_df.iloc[i,26] = float(np.var(x))
     gya_df.iloc[i,27] = float((np.sum(x)-np.var(x)))
 fin_df=gya_df.sort_values('優劣値',ascending=False)
-fin_df
+
 
 dataw=[]
 for i in range(0,len(fin_df)):
