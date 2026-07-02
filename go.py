@@ -148,7 +148,6 @@ elif (a>=0.41)and(a<0.56):
 else:
     bbq=24
 print(bbq) 
-bbq
 
 y_df['相手への評価'] = 0
 for i in range(y_df.shape[0]):
@@ -264,7 +263,6 @@ kid_df = df.where(mask, 0)
 
 # 1. 元のデータフレームをコピーしてベースを作成
 new_df = kid_df.copy()
-new_df
 # 2. 条件分岐
 if max(aaa) < 28:
     # --- max(aaa)が28未満の時 ---
@@ -356,7 +354,7 @@ for c in cliques:
         for sub in combinations(c, 5):
             if 0 in sub:
                 result.append(list(sorted(sub)))
-
+result
 
 id2pos = {}
 for pos, id, in enumerate(w_df.index):
