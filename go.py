@@ -148,7 +148,7 @@ elif (a>=0.41)and(a<0.56):
 else:
     bbq=24
 print(bbq) 
-
+bbq
 
 y_df['相手への評価'] = 0
 for i in range(y_df.shape[0]):
