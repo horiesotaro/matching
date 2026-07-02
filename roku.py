@@ -358,6 +358,7 @@ for c in cliques:
             if 0 in sub:
                 result.append(list(sorted(sub)))
 
+result
 
 
 id2pos = {}
