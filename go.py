@@ -449,10 +449,10 @@ for idx, row in last_df.iterrows():
 # 重複のない行だけを抽出
 unique_rows_df = last_df.loc[selected_indices]
 
-a=unique_rows0_df.iloc[0,1]
-b=unique_rows0_df.iloc[0,2]
-c=unique_rows0_df.iloc[0,3]
-d=unique_rows0_df.iloc[0,4]
+a=unique_rows_df.iloc[0,1]
+b=unique_rows_df.iloc[0,2]
+c=unique_rows_df.iloc[0,3]
+d=unique_rows_df.iloc[0,4]
 st.text(f"あなたは{a}さん、{b}さん、{c}さん,{d}さんとマッチしました")
 
 st.text(f"{a}さんの詳細")
