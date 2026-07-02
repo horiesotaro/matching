@@ -147,7 +147,6 @@ elif (a>=0.41)and(a<0.56):
     bbq=26
 else:
     bbq=24
-print(bbq) 
 
 
 y_df['相手への評価'] = 0
@@ -293,7 +292,7 @@ else:
     new_df = new_df.mask(new_df < 28, "x")
 
 # 結果の確認
-
+new_df
 
 
 # In[96]:
@@ -359,13 +358,11 @@ for c in cliques:
             if 0 in sub:
                 result.append(list(sorted(sub)))
 
-print(result)
 
 
 id2pos = {}
 for pos, id, in enumerate(w_df.index):
     id2pos[id] = pos
-print(id2pos)
 
 
 # In[103]:
@@ -400,6 +397,9 @@ o1_df=pd.DataFrame(result, columns =['あなた','user1','user2','user3','user4'
 o2_df=pd.DataFrame(datar, columns =['user1からあなたへの評価','user2からあなたへの評価','user3からあなたへの評価','user4からあなたへの評価','user5からあなたへの評価','あなたからuser1への評価','user2からuser1への評価','user3からuser1への評価','user4からuser1への評価','user5からuser1への評価','あなたからuser2への評価','user1からuser2への評価','user3からuser2への評価','user4からuser2への評価','user5からuser2への評価','あなたからuser3への評価','user1からuser3への評価','user2からuser3への評価','user4からuser3への評価','user5からuser3への評価','あなたからuser4への評価','user1からuser4への評価','user2からuser4への評価','user3からuser4への評価','user5からuser4への評価','あなたからuser5への評価','user1からuser5への評価','user2からuser5への評価','user3からuser5への評価','user4からuser5への評価'])
 o_df=pd.concat([o1_df,o2_df],axis=1)
 
+o_df
+
+
 o_df.loc[:,['user2','user3','user4','user5']]=np.sort(o_df.loc[:,['user2','user3','user4','user5']].values)
 gya_df=o_df.sort_values('user2')
 # In[72]:
@@ -416,6 +416,10 @@ for i in range(gya_df.shape[0]):
     gya_df.iloc[i,37] = float(np.var(x))
     gya_df.iloc[i,38] = float((np.sum(x)-np.var(x)))
 fin_df=gya_df.sort_values('優劣値',ascending=False)
+
+
+fin_df
+
 
 dataw=[]
 for i in range(0,len(fin_df)):
