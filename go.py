@@ -403,15 +403,16 @@ gya_df=o_df.sort_values('user2')
 # In[72]:
 gya_df=gya_df.drop_duplicates(subset=['あなた','user1','user2','user3','user4'])
 
-gya_df['合計'] = 0
-gya_df['分散'] = 0
-gya_df['優劣値'] = 0
+import numpy as np
+gya_df['合計'] = 0.0
+gya_df['分散'] = 0.0
+gya_df['優劣値'] = 0.0
 for i in range(gya_df.shape[0]):
     x = gya_df.iloc[i,5:25].values
     # print(np.sum(x),np.var(x))
-    gya_df.iloc[i,25] = np.sum(x)
-    gya_df.iloc[i,26] = np.var(x)
-    gya_df.iloc[i,27] = (np.sum(x)-np.var(x))
+    gya_df.iloc[i,25] = float(np.sum(x))
+    gya_df.iloc[i,26] = float(np.var(x))
+    gya_df.iloc[i,27] = float((np.sum(x)-np.var(x)))
 fin_df=gya_df.sort_values('優劣値',ascending=False)
 
 dataw=[]
