@@ -182,8 +182,7 @@ for i in range(1,len(s_df.index)):
 w_df=s_df.iloc[0:,8:]
 w_df.columns=w_df.index
 kids_df=w_df
-# In[92]:
-kid_df
+kids_df
 
 
 
