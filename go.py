@@ -136,6 +136,8 @@ total_users = d_df['MBTI'].isin(target_mbti).sum()
 print(f"相手への評価が28or MAX以上のMBTIに属するユーザーの合計人数: {total_users}人")
 
 a=(total_users)/(len(d_df))
+a
+
 
 if a>=0.86:
     bbq=32
@@ -148,6 +150,8 @@ elif (a>=0.41)and(a<0.56):
 else:
     bbq=24
 print(bbq) 
+bbq
+
 
 y_df['相手への評価'] = 0
 for i in range(y_df.shape[0]):
