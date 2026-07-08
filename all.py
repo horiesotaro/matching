@@ -460,39 +460,49 @@ def process_matching_and_get_details(g_df, mbti_df, data23, start_node=0):
 import networkx as nx
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from itertools import product, combinations
 
 def process_clique_matching_4ppl(kid_df, w_df, mbti_df, start_node=0):
-    # 1. 隣接行列のインデックスを揃え、さらに w_df に存在するユーザーだけに絞り込む（★ここを追加）
+    """
+    隣接行列から4人の完全グラフ(クリーク)を検出し、相互評価スコアと詳細情報を取得する関数。
+    """
+    # 1. 隣接行列のインデックスとカラムを統一
     kid_df.columns = kid_df.index
-    valid_users = w_df.index
-    # kid_df と w_df 両方に存在するユーザーだけを残す
-    common_users = kid_df.index.intersection(valid_users)
+    
+    w_df_keys = w_df.index
+    kid_df_keys = kid_df.index.astype(w_df_keys.dtype)
+    
+    kid_df.index = kid_df_keys
+    kid_df.columns = kid_df_keys
+    
+    common_users = kid_df_keys.intersection(w_df_keys)
+    if len(common_users) == 0:
+        print("エラー: 共通のユーザーがいません。")
+        return None
+        
     kid_df = kid_df.loc[common_users, common_users]
+    typed_start_node = w_df_keys.dtype.type(start_node)
 
     # 2. グラフを構築
     G = nx.Graph(nx.from_pandas_adjacency(kid_df))
     
-    # ... (以下はそのまま)
-    
-    # 2. クリーク探索（あなた(0)を含み、4人以上の完全グラフから4人の組み合わせを抽出）
+    # 3. クリーク探索
     cliques = nx.find_cliques(G)
     result = []
     for c in cliques:
-        if start_node in c and len(c) >= 4:
+        if typed_start_node in c and len(c) >= 4:
             for sub in combinations(c, 4):
-                if start_node in sub:
+                if typed_start_node in sub:
                     result.append(list(sorted(sub)))
                     
     if not result:
         print("4人グループの候補(クリーク)が見つかりませんでした。")
         return None
 
-    # 3. ユーザーIDから位置(インデックス)へのマッピング
+    # 4. ユーザーIDから位置(インデックス)へのマッピング
     id2pos = {id_val: pos for pos, id_val in enumerate(w_df.index)}
     
-    # 4. 4人同士の全対全(12通り)の評価値データを抽出
+    # 5. 4人同士の全対全(12通り)の評価値データを抽出
     dataq = []
     for g in result:
         for i, j in product(range(4), range(4)):
@@ -502,37 +512,46 @@ def process_clique_matching_4ppl(kid_df, w_df, mbti_df, start_node=0):
     n = 12
     datar = [dataq[c:c+n] for c in range(0, len(dataq), n)]
     
-    # 5. データフレームの結合と重複削除
+    # 6. データフレームの結合と重複削除
     o1_df = pd.DataFrame(result, columns=['あなた', 'user1', 'user2', 'user3'])
-    o2_df = pd.DataFrame(datar, columns=[
+    
+    # カラム名をリストとして定義（後で名前で指定するために変数化）
+    eval_cols = [
         'user1からあなたへの評価', 'user2からあなたへの評価', 'user3からあなたへの評価',
         'あなたからuser1への評価', 'user2からuser1への評価', 'user3からuser1への評価',
         'あなたからuser2への評価', 'user1からuser2への評価', 'user3からuser2への評価',
         'あなたからuser3への評価', 'user1からuser3への評価', 'user2からuser3への評価'
-    ])
+    ]
+    o2_df = pd.DataFrame(datar, columns=eval_cols)
     o_df = pd.concat([o1_df, o2_df], axis=1)
     
-    # 重複判定のためにソートして一意にする
     o_df.loc[:, ['user2', 'user3']] = np.sort(o_df.loc[:, ['user2', 'user3']].values)
-    gya_df = o_df.sort_values('user2').drop_duplicates(subset=['あなた', 'user1', 'user2', 'user3']).copy()
+    gya_df = o_df.drop_duplicates(subset=['あなた', 'user1', 'user2', 'user3']).copy()
     
-    # 6. ベクトル化処理による合計・分散・優劣値の計算
-    eval_values = gya_df.iloc[:, 4:16].values
+    # 7. 合計・分散・優劣値の計算
+    eval_values = gya_df[eval_cols].values
     gya_df['合計'] = np.sum(eval_values, axis=1)
     gya_df['分散'] = np.var(eval_values, axis=1)
     gya_df['優劣値'] = gya_df['合計'] - gya_df['分散']
     
-    # 優劣値順にソート
     fin_df = gya_df.sort_values('優劣値', ascending=False)
     
-    # 7. 各評価軸の「最大値が25以上」という特定条件でフィルタリング
+    # 8. 各評価軸の「最大値が25以上」という特定条件でフィルタリング
+    # 【改善】スライス番号(iloc)ではなく、カラム名で直接確実に指定します
     dataw = []
-    for i in range(len(fin_df)):
-        row = fin_df.iloc[i]
-        # 各ユーザーへの評価・被評価の組み合わせ条件
-        if (max(row[4:7]) >= 25 and max(row[7:10]) >= 25 and max(row[10:13]) >= 25 and max(row[13:16]) >= 25 and
-            max(row[7], row[10], row[13]) >= 25 and max(row[4], row[11], row[14]) >= 25 and
-            max(row[5], row[8], row[15]) >= 25 and max(row[6], row[9], row[12]) >= 25):
+    for idx, row in fin_df.iterrows():
+        # それぞれの軸をグループ化して判定
+        cond1 = max(row['user1からあなたへの評価'], row['user2からあなたへの評価'], row['user3からあなたへの評価']) >= 25
+        cond2 = max(row['あなたからuser1への評価'], row['user2からuser1への評価'], row['user3からuser1への評価']) >= 25
+        cond3 = max(row['あなたからuser2への評価'], row['user1からuser2への評価'], row['user3からuser2への評価']) >= 25
+        cond4 = max(row['あなたからuser3への評価'], row['user1からuser3への評価'], row['user2からuser3への評価']) >= 25
+        
+        cond5 = max(row['あなたからuser1への評価'], row['あなたからuser2への評価'], row['あなたからuser3への評価']) >= 25
+        cond6 = max(row['user1からあなたへの評価'], row['user1からuser2への評価'], row['user1からuser3への評価']) >= 25
+        cond7 = max(row['user2からあなたへの評価'], row['user2からuser1への評価'], row['user2からuser3への評価']) >= 25
+        cond8 = max(row['user3からあなたへの評価'], row['user3からuser1への評価'], row['user3からuser2への評価']) >= 25
+        
+        if cond1 and cond2 and cond3 and cond4 and cond5 and cond6 and cond7 and cond8:
             dataw.append(row)
             
     if not dataw:
@@ -543,14 +562,14 @@ def process_clique_matching_4ppl(kid_df, w_df, mbti_df, start_node=0):
     cols = last_df.columns.difference(['分散', '優劣値'])
     last_df[cols] = last_df[cols].round().astype(int)
     
-    # 8. 重複のない一意なユーザーの組み合わせを抽出 (user1, user2, user3)
+    # 9. 重複のない一意なユーザーの組み合わせを抽出
     used_nums = set()
     selected_indices = []
     target_cols = ['user1', 'user2', 'user3']
     
     for idx, row in last_df.iterrows():
         current_values = set(row[target_cols].values)
-        current_values.discard(start_node) # 起点ノードは除外
+        current_values.discard(typed_start_node)
         
         if not (current_values & used_nums):
             selected_indices.append(idx)
@@ -561,13 +580,12 @@ def process_clique_matching_4ppl(kid_df, w_df, mbti_df, start_node=0):
     if unique_rows0_df.empty:
         return None
         
-    # 9. 最上位1組のマッチング結果と詳細情報を取得
+    # 10. 最上位1組のマッチング結果と詳細情報を取得
     best_match = unique_rows0_df.iloc[0]
     a = best_match['user1']
     b = best_match['user2']
     c = best_match['user3']
     
-    # mbti_dfから詳細情報を取得
     detail_a = mbti_df.iloc[int(a) - 1, 0:4]
     detail_b = mbti_df.iloc[int(b) - 1, 0:4]
     detail_c = mbti_df.iloc[int(c) - 1, 0:4]
