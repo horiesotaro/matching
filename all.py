@@ -510,7 +510,7 @@ def process_clique_matching_4ppl(kid_df, g_df, mbti_df, start_node=0):
 
 
 # ====================================================
-# 【確定版】5人マッチング用関数 (第2引数を g_df に固定)
+# 【修正版・確定】5人マッチング用関数 (カラム名指定安全ver)
 # ====================================================
 def process_clique_matching_5ppl(kid_df, g_df, mbti_df, start_node=0):
     kid_df.columns = kid_df.index
@@ -531,9 +531,9 @@ def process_clique_matching_5ppl(kid_df, g_df, mbti_df, start_node=0):
     cliques = nx.find_cliques(G)
     result = []
     for c in cliques:
-        if start_node in c and len(c) >= 5:
+        if typed_start_node in c and len(c) >= 5:
             for sub in combinations(c, 5):
-                if start_node in sub:
+                if typed_start_node in sub:
                     result.append(list(sorted(sub)))
                     
     if not result:
@@ -551,6 +551,8 @@ def process_clique_matching_5ppl(kid_df, g_df, mbti_df, start_node=0):
     datar = [dataq[c:c+n] for c in range(0, len(dataq), n)]
     
     o1_df = pd.DataFrame(result, columns=['あなた', 'user1', 'user2', 'user3', 'user4'])
+    
+    # 20個の評価カラムを定義
     eval_cols = [
         'user1 からあなたへの評価', 'user2 からあなたへの評価', 'user3 からあなたへの評価', 'user4 からあなたへの評価',
         'あなたから user1 への評価', 'user2 から user1 への評価', 'user3 から user1 への評価', 'user4 から user1 への評価',
@@ -560,10 +562,11 @@ def process_clique_matching_5ppl(kid_df, g_df, mbti_df, start_node=0):
     ]
     o2_df = pd.DataFrame(datar, columns=eval_cols)
     o_df = pd.concat([o1_df, o2_df], axis=1)
-    o_df.loc[:, ['user2', 'user3', 'user4']] = np.sort(o_df.loc[:, ['user2', 'user3', 'user4']].values)
-    gya_df = o_df.sort_values('user2').drop_duplicates(subset=['あなた', 'user1', 'user2', 'user3', 'user4']).copy()
     
-    eval_values = gya_df.iloc[:, 5:25].values
+    o_df.loc[:, ['user2', 'user3', 'user4']] = np.sort(o_df.loc[:, ['user2', 'user3', 'user4']].values)
+    gya_df = o_df.drop_duplicates(subset=['あなた', 'user1', 'user2', 'user3', 'user4']).copy()
+    
+    eval_values = gya_df[eval_cols].values
     gya_df['合計'] = np.sum(eval_values, axis=1)
     gya_df['分散'] = np.var(eval_values, axis=1)
     gya_df['優劣値'] = gya_df['合計'] - gya_df['分散']
@@ -571,14 +574,22 @@ def process_clique_matching_5ppl(kid_df, g_df, mbti_df, start_node=0):
     fin_df = gya_df.sort_values('優劣値', ascending=False)
     
     dataw = []
-    for i in range(len(fin_df)):
-        row = fin_df.iloc[i]
-        if (max(row[5:9]) >= 24 and max(row[9:13]) >= 24 and max(row[13:17]) >= 24 and max(row[17:21]) >= 24 and max(row[21:25]) >= 24 and
-            max(row[9], row[13], row[17], row[21]) >= 24 and
-            max(row[5], row[14], row[18], row[22]) >= 24 and
-            max(row[6], row[10], row[19], row[23]) >= 24 and
-            max(row[7], row[11], row[15], row[24]) >= 24 and
-            max(row[8], row[12], row[16], row[20]) >= 24):
+    for idx, row in fin_df.iterrows():
+        # 【改善】インデックス番号ではなく、カラム名で直接最大値を判定 (各関係性で24以上があるか)
+        cond_recv0 = max(row['user1 からあなたへの評価'], row['user2 からあなたへの評価'], row['user3 からあなたへの評価'], row['user4 からあなたへの評価']) >= 24
+        cond_recv1 = max(row['あなたから user1 への評価'], row['user2 から user1 への評価'], row['user3 から user1 への評価'], row['user4 から user1 への評価']) >= 24
+        cond_recv2 = max(row['あなたから user2 への評価'], row['user1 から user2 への評価'], row['user3 から user2 への評価'], row['user4 から user2 への評価']) >= 24
+        cond_recv3 = max(row['あなたから user3 への評価'], row['user1 から user3 への評価'], row['user2 から user3 への評価'], row['user4 から user3 への評価']) >= 24
+        cond_recv4 = max(row['あなたから user4 への評価'], row['user1 から user4 への評価'], row['user2 から user4 への評価'], row['user3 から user4 への評価']) >= 24
+        
+        cond_send0 = max(row['あなたから user1 への評価'], row['あなたから user2 への評価'], row['あなたから user3 への評価'], row['あなたから user4 への評価']) >= 24
+        cond_send1 = max(row['user1 からあなたへの評価'], row['user1 から user2 への評価'], row['user1 から user3 への評価'], row['user1 から user4 への評価']) >= 24
+        cond_send2 = max(row['user2 からあなたへの評価'], row['user2 から user1 への評価'], row['user2 から user3 への評価'], row['user2 から user4 への評価']) >= 24
+        cond_send3 = max(row['user3 からあなたへの評価'], row['user3 から user1 への評価'], row['user3 から user2 への評価'], row['user3 から user4 への評価']) >= 24
+        cond_send4 = max(row['user4 からあなたへの評価'], row['user4 から user1 への評価'], row['user4 から user2 への評価'], row['user4 から user3 への評価']) >= 24
+        
+        if (cond_recv0 and cond_recv1 and cond_recv2 and cond_recv3 and cond_recv4 and 
+            cond_send0 and cond_send1 and cond_send2 and cond_send3 and cond_send4):
             dataw.append(row)
             
     if not dataw:
@@ -593,7 +604,7 @@ def process_clique_matching_5ppl(kid_df, g_df, mbti_df, start_node=0):
     target_cols = ['user1', 'user2', 'user3', 'user4']
     for idx, row in last_df.iterrows():
         current_values = set(row[target_cols].values)
-        current_values.discard(start_node)
+        current_values.discard(typed_start_node)
         if not (current_values & used_nums):
             selected_indices.append(idx)
             used_nums.update(current_values)
