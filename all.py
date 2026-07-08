@@ -557,4 +557,107 @@ def process_clique_matching_5ppl(kid_df, g_df, mbti_df, start_node=0):
     
     eval_values = gya_df.iloc[:, 5:25].values
     gya_df['合計'] = np.sum(eval_values, axis=1)
-    gya_df['分散'] = np.var(eval_values, axis
+    gya_df['分散'] = np.var(eval_values, axis=1)
+    gya_df['優劣値'] = gya_df['合計'] - gya_df['分散']
+    
+    fin_df = gya_df.sort_values('優劣値', ascending=False)
+    
+    dataw = []
+    for i in range(len(fin_df)):
+        row = fin_df.iloc[i]
+        if (max(row[5:9]) >= 24 and max(row[9:13]) >= 24 and max(row[13:17]) >= 24 and max(row[17:21]) >= 24 and max(row[21:25]) >= 24 and
+            max(row[9], row[13], row[17], row[21]) >= 24 and
+            max(row[5], row[14], row[18], row[22]) >= 24 and
+            max(row[6], row[10], row[19], row[23]) >= 24 and
+            max(row[7], row[11], row[15], row[24]) >= 24 and
+            max(row[8], row[12], row[16], row[20]) >= 24):
+            dataw.append(row)
+            
+    if not dataw:
+        return None
+        
+    last_df = pd.DataFrame(dataw)
+    cols = last_df.columns.difference(['分散', '優劣値'])
+    last_df[cols] = last_df[cols].round().astype(int)
+    
+    used_nums = set()
+    selected_indices = []
+    target_cols = ['user1', 'user2', 'user3', 'user4']
+    for idx, row in last_df.iterrows():
+        current_values = set(row[target_cols].values)
+        current_values.discard(start_node)
+        if not (current_values & used_nums):
+            selected_indices.append(idx)
+            used_nums.update(current_values)
+            
+    unique_rows_df = last_df.loc[selected_indices]
+    if unique_rows_df.empty:
+        return None
+        
+    best_match = unique_rows_df.iloc[0]
+    a = best_match['user1']
+    b = best_match['user2']
+    c = best_match['user3']
+    d = best_match['user4']
+    
+    detail_a = mbti_df.iloc[int(a) - 1, 0:4]
+    detail_b = mbti_df.iloc[int(b) - 1, 0:4]
+    detail_c = mbti_df.iloc[int(c) - 1, 0:4]
+    detail_d = mbti_df.iloc[int(d) - 1, 0:4]
+    return a, b, c, d, detail_a, detail_b, detail_c, detail_d
+
+
+# ====================================================
+# 【修正版】メインの画面出力処理（関数のあとに配置）
+# ====================================================
+if people == '3人':
+    result = process_matching_and_get_details(g_df, mbti_df, data23, start_node=0)
+    if result is not None:
+        a, b, detail_a, detail_b = result
+        st.text(f"あなたは{a}さん、{b}さんとマッチしました")
+        st.text(f"{a}さんの詳細")
+        st.text(detail_a)
+        st.text("")
+        st.text(f"{b}さんの詳細")
+        st.text(detail_b)
+    else:
+        st.text("マッチング条件に合うユーザーが見つかりませんでした。")
+
+elif people == '4人':
+    # 修正点: 第2引数を w_df から g_df に変更
+    clique_result = process_clique_matching_4ppl(kid_df, g_df, mbti_df, start_node=0)
+    if clique_result is not None:
+        a, b, c, detail_a, detail_b, detail_c = clique_result
+        st.text(f"あなたは{a}さん、{b}さん、{c}さんとマッチしました")
+        st.text(f"{a}さんの詳細")
+        st.text(detail_a)
+        st.text("")
+        st.text(f"{b}さんの詳細")
+        st.text(detail_b)
+        st.text("")
+        st.text(f"{c}さんの詳細")
+        st.text(detail_c)
+    else:
+        st.text("条件に合致する 4 人グループが見つかりませんでした。")
+
+elif people == '5人':
+    # 修正点: 第2引数を w_df から g_df に変更
+    clique_5_result = process_clique_matching_5ppl(kid_df, g_df, mbti_df, start_node=0)
+    if clique_5_result is not None:
+        a, b, c, d, detail_a, detail_b, detail_c, detail_d = clique_5_result
+        st.text(f"あなたは{a}さん、{b}さん、{c}さん、{d}さんとマッチしました")
+        st.text(f"{a}さんの詳細")
+        st.text(detail_a)
+        st.text("")
+        st.text(f"{b}さんの詳細")
+        st.text(detail_b)
+        st.text("")
+        st.text(f"{c}さんの詳細")
+        st.text(detail_c)
+        st.text("")
+        st.text(f"{d}さんの詳細")
+        st.text(detail_d)
+    else:
+        st.text("条件に合致する 5 人グループが見つかりませんでした。")
+else:
+    st.text("6 人以上には対応していません")
