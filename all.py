@@ -513,7 +513,7 @@ def process_clique_matching_4ppl(kid_df, w_df, mbti_df, start_node=0):
     for g in result:
         for i, j in product(range(4), range(4)):
             if i != j:
-                dataq.append(w_df.iat[id2pos[g[i]], id2pos[g[j]])
+                dataq.append(w_df.iat[id2pos[g[i]], id2pos[g[j]]])
                 
     n = 12
     datar = [dataq[c:c+n] for c in range(0, len(dataq), n)]
