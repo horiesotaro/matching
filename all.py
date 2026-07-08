@@ -289,69 +289,52 @@ for j in range(len(new_df.index)):
     data23 = np.vstack((data23,v3_df.values))
 
 if people=='3人':
-result = process_matching_and_get_details(g_df, mbti_df, data23, start_node=0)
-if result is not None:
-    a, b, detail_a, detail_b = result
-    
-    st.text(f"あなたは{a}さん、{b}さんとマッチしました")
-    
-    st.text(f"{a}さんの詳細")
-    st.text(detail_a)
-    st.text("")
-    
-    st.text(f"{b}さんの詳細")
-    st.text(detail_b)
-else:
-    st.text("マッチング条件に合うユーザーが見つかりませんでした。")
+    result = process_matching_and_get_details(g_df, mbti_df, data23, start_node=0)
+    if result is not None:
+        a, b, detail_a, detail_b = result
+        st.text(f"あなたは{a}さん、{b}さんとマッチしました")
+        st.text(f"{a}さんの詳細")
+        st.text(detail_a)
+        st.text("")
+        st.text(f"{b}さんの詳細")
+        st.text(detail_b)
+    else:
+        st.text("マッチング条件に合うユーザーが見つかりませんでした。")
 elif people=='4人':
-clique_result = process_clique_matching_4ppl(kid_df, w_df, mbti_df, start_node=0)
-
-# 結果の表示
-if clique_result is not None:
-    a, b, c, detail_a, detail_b, detail_c = clique_result
-    
-    st.text(f"あなたは{a}さん、{b}さん、{c}さんとマッチしました")
-    
-    st.text(f"{a}さんの詳細")
-    st.text(detail_a)
-    st.text("")
-    
-    st.text(f"{b}さんの詳細")
-    st.text(detail_b)
-    st.text("")
-    
-    st.text(f"{c}さんの詳細")
-    st.text(detail_c)
-else:
-    st.text("条件に合致する4人グループが見つかりませんでした。")
+    clique_result = process_clique_matching_4ppl(kid_df, w_df, mbti_df, start_node=0)
+    if clique_result is not None:
+        a, b, c, detail_a, detail_b, detail_c = clique_result
+        st.text(f"あなたは{a}さん、{b}さん、{c}さんとマッチしました")
+        st.text(f"{a}さんの詳細")
+        st.text(detail_a)
+        st.text("")
+        st.text(f"{b}さんの詳細")
+        st.text(detail_b)
+        st.text("")
+        st.text(f"{c}さんの詳細")
+        st.text(detail_c)
+    else:
+        st.text("条件に合致する4人グループが見つかりませんでした。")
 elif people=='5人':
-# 関数の呼び出し
-clique_5_result = process_clique_matching_5ppl(kid_df, w_df, mbti_df, start_node=0)
-
-# 結果の表示
-if clique_5_result is not None:
-    a, b, c, d, detail_a, detail_b, detail_c, detail_d = clique_5_result
-    
-    st.text(f"あなたは{a}さん、{b}さん、{c}さん、{d}さんとマッチしました")
-    
-    st.text(f"{a}さんの詳細")
-    st.text(detail_a)
-    st.text("")
-    
-    st.text(f"{b}さんの詳細")
-    st.text(detail_b)
-    st.text("")
-    
-    st.text(f"{c}さんの詳細")
-    st.text(detail_c)
-    st.text("")
-    
-    st.text(f"{d}さんの詳細")
-    st.text(detail_d)
+    clique_5_result = process_clique_matching_5ppl(kid_df, w_df, mbti_df, start_node=0)
+    if clique_5_result is not None:
+        a, b, c, d, detail_a, detail_b, detail_c, detail_d = clique_5_result
+        st.text(f"あなたは{a}さん、{b}さん、{c}さん、{d}さんとマッチしました")
+        st.text(f"{a}さんの詳細")
+        st.text(detail_a)
+        st.text("")
+        st.text(f"{b}さんの詳細")
+        st.text(detail_b)
+        st.text("")
+        st.text(f"{c}さんの詳細")
+        st.text(detail_c)
+        st.text("")
+        st.text(f"{d}さんの詳細")
+        st.text(detail_d)
+    else:
+        st.text("条件に合致する5人グループが見つかりませんでした。")
 else:
-    st.text("条件に合致する5人グループが見つかりませんでした。")
-else:
-st.text("6人以上には対応していません")
+    st.text("6人以上には対応していません")
 
 
 
