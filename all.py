@@ -288,7 +288,7 @@ for j in range(len(new_df.index)):
     # print(v3_df.values.shape)
     data23 = np.vstack((data23,v3_df.values))
 
-if people='3人':
+if people=='3人':
 result = process_matching_and_get_details(g_df, mbti_df, data23, start_node=0)
 if result is not None:
     a, b, detail_a, detail_b = result
@@ -303,7 +303,7 @@ if result is not None:
     st.text(detail_b)
 else:
     st.text("マッチング条件に合うユーザーが見つかりませんでした。")
-elif people='4人':
+elif people=='4人':
 clique_result = process_clique_matching_4ppl(kid_df, w_df, mbti_df, start_node=0)
 
 # 結果の表示
@@ -324,7 +324,7 @@ if clique_result is not None:
     st.text(detail_c)
 else:
     st.text("条件に合致する4人グループが見つかりませんでした。")
-elif people='5人':
+elif people=='5人':
 # 関数の呼び出し
 clique_5_result = process_clique_matching_5ppl(kid_df, w_df, mbti_df, start_node=0)
 
