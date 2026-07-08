@@ -292,7 +292,16 @@ for j in range(len(new_df.index)):
 
 
 # ====================================================
-# 【修正版】3人マッチング用関数
+# 必要ライブラリのインポート（関数の外で一括定義）
+# ====================================================
+from itertools import product, combinations
+import networkx as nx
+import pandas as pd
+import numpy as np
+import streamlit as st
+
+# ====================================================
+# 【確定版】3人マッチング用関数
 # ====================================================
 def process_matching_and_get_details(g_df, mbti_df, data23, start_node=0):
     user_id = g_df.index
@@ -394,7 +403,7 @@ def process_matching_and_get_details(g_df, mbti_df, data23, start_node=0):
 
 
 # ====================================================
-# 【修正版】4人マッチング用関数 (w_df を g_df に修正)
+# 【確定版】4人マッチング用関数 (第2引数を g_df に固定)
 # ====================================================
 def process_clique_matching_4ppl(kid_df, g_df, mbti_df, start_node=0):
     kid_df.columns = kid_df.index
@@ -501,7 +510,7 @@ def process_clique_matching_4ppl(kid_df, g_df, mbti_df, start_node=0):
 
 
 # ====================================================
-# 【修正版】5人マッチング用関数 (w_df を g_df に修正)
+# 【確定版】5人マッチング用関数 (第2引数を g_df に固定)
 # ====================================================
 def process_clique_matching_5ppl(kid_df, g_df, mbti_df, start_node=0):
     kid_df.columns = kid_df.index
@@ -551,7 +560,6 @@ def process_clique_matching_5ppl(kid_df, g_df, mbti_df, start_node=0):
     ]
     o2_df = pd.DataFrame(datar, columns=eval_cols)
     o_df = pd.concat([o1_df, o2_df], axis=1)
-    
     o_df.loc[:, ['user2', 'user3', 'user4']] = np.sort(o_df.loc[:, ['user2', 'user3', 'user4']].values)
     gya_df = o_df.sort_values('user2').drop_duplicates(subset=['あなた', 'user1', 'user2', 'user3', 'user4']).copy()
     
@@ -608,9 +616,12 @@ def process_clique_matching_5ppl(kid_df, g_df, mbti_df, start_node=0):
 
 
 # ====================================================
-# 【修正版】メインの画面出力処理（関数のあとに配置）
+# メインの画面出力処理（条件分岐）
 # ====================================================
-if people == '3人':
+# セレクトボックスの値に空白があっても判定できるように .strip() を適用
+clean_people = people.strip()
+
+if clean_people in ['3人', '3 人']:
     result = process_matching_and_get_details(g_df, mbti_df, data23, start_node=0)
     if result is not None:
         a, b, detail_a, detail_b = result
@@ -623,8 +634,7 @@ if people == '3人':
     else:
         st.text("マッチング条件に合うユーザーが見つかりませんでした。")
 
-elif people == '4人':
-    # 修正点: 第2引数を w_df から g_df に変更
+elif clean_people in ['4人', '4 人']:
     clique_result = process_clique_matching_4ppl(kid_df, g_df, mbti_df, start_node=0)
     if clique_result is not None:
         a, b, c, detail_a, detail_b, detail_c = clique_result
@@ -640,8 +650,7 @@ elif people == '4人':
     else:
         st.text("条件に合致する 4 人グループが見つかりませんでした。")
 
-elif people == '5人':
-    # 修正点: 第2引数を w_df から g_df に変更
+elif clean_people in ['5人', '5 人']:
     clique_5_result = process_clique_matching_5ppl(kid_df, g_df, mbti_df, start_node=0)
     if clique_5_result is not None:
         a, b, c, d, detail_a, detail_b, detail_c, detail_d = clique_5_result
@@ -660,4 +669,3 @@ elif people == '5人':
     else:
         st.text("条件に合致する 5 人グループが見つかりませんでした。")
 else:
-    st.text("6 人以上には対応していません")
