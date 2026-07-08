@@ -541,15 +541,15 @@ def process_clique_matching_4ppl(kid_df, w_df, mbti_df, start_node=0):
     dataw = []
     for idx, row in fin_df.iterrows():
         # それぞれの軸をグループ化して判定
-        cond1 = max(row['user1からあなたへの評価'], row['user2からあなたへの評価'], row['user3からあなたへの評価']) >= 25
-        cond2 = max(row['あなたからuser1への評価'], row['user2からuser1への評価'], row['user3からuser1への評価']) >= 25
-        cond3 = max(row['あなたからuser2への評価'], row['user1からuser2への評価'], row['user3からuser2への評価']) >= 25
-        cond4 = max(row['あなたからuser3への評価'], row['user1からuser3への評価'], row['user2からuser3への評価']) >= 25
+        cond1 = max(row['user1からあなたへの評価'], row['user2からあなたへの評価'], row['user3からあなたへの評価']) >= 24
+        cond2 = max(row['あなたからuser1への評価'], row['user2からuser1への評価'], row['user3からuser1への評価']) >= 24
+        cond3 = max(row['あなたからuser2への評価'], row['user1からuser2への評価'], row['user3からuser2への評価']) >= 24
+        cond4 = max(row['あなたからuser3への評価'], row['user1からuser3への評価'], row['user2からuser3への評価']) >= 24
         
-        cond5 = max(row['あなたからuser1への評価'], row['あなたからuser2への評価'], row['あなたからuser3への評価']) >= 25
-        cond6 = max(row['user1からあなたへの評価'], row['user1からuser2への評価'], row['user1からuser3への評価']) >= 25
-        cond7 = max(row['user2からあなたへの評価'], row['user2からuser1への評価'], row['user2からuser3への評価']) >= 25
-        cond8 = max(row['user3からあなたへの評価'], row['user3からuser1への評価'], row['user3からuser2への評価']) >= 25
+        cond5 = max(row['あなたからuser1への評価'], row['あなたからuser2への評価'], row['あなたからuser3への評価']) >= 24
+        cond6 = max(row['user1からあなたへの評価'], row['user1からuser2への評価'], row['user1からuser3への評価']) >= 24
+        cond7 = max(row['user2からあなたへの評価'], row['user2からuser1への評価'], row['user2からuser3への評価']) >= 24
+        cond8 = max(row['user3からあなたへの評価'], row['user3からuser1への評価'], row['user3からuser2への評価']) >= 24
         
         if cond1 and cond2 and cond3 and cond4 and cond5 and cond6 and cond7 and cond8:
             dataw.append(row)
