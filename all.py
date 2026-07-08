@@ -464,33 +464,17 @@ import matplotlib.pyplot as plt
 from itertools import product, combinations
 
 def process_clique_matching_4ppl(kid_df, w_df, mbti_df, start_node=0):
-    """
-    隣接行列から4人の完全グラフ(クリーク)を検出し、相互評価スコアと詳細情報を取得する関数。
-    
-    Parameters:
-    -----------
-    kid_df : pandas.DataFrame
-        ネットワーク構築用の隣接行列（インデックスとカラムがユーザーID）
-    w_df : pandas.DataFrame
-        ユーザー間の詳細な評価値を持つデータフレーム
-    mbti_df : pandas.DataFrame
-        各ユーザーの詳細（MBTIなど）が格納されたデータフレーム
-    start_node : int or str
-        起点となる「あなた」のノードID（デフォルト: 0）
-        
-    Returns:
-    --------
-    tuple or None
-        (user1_id, user2_id, user3_id, detail_a, detail_b, detail_c) のタプル。
-        条件に合うマッチングが見つからなかった場合は None。
-    """
-    # 1. 隣接行列からグラフを構築
+    # 1. 隣接行列のインデックスを揃え、さらに w_df に存在するユーザーだけに絞り込む（★ここを追加）
     kid_df.columns = kid_df.index
+    valid_users = w_df.index
+    # kid_df と w_df 両方に存在するユーザーだけを残す
+    common_users = kid_df.index.intersection(valid_users)
+    kid_df = kid_df.loc[common_users, common_users]
+
+    # 2. グラフを構築
     G = nx.Graph(nx.from_pandas_adjacency(kid_df))
     
-    # (オプション) グラフを描画したい場合はコメントアウトを解除してください
-    # nx.draw(G, with_labels=True)
-    # plt.show()
+    # ... (以下はそのまま)
     
     # 2. クリーク探索（あなた(0)を含み、4人以上の完全グラフから4人の組み合わせを抽出）
     cliques = nx.find_cliques(G)
