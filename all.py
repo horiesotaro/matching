@@ -669,3 +669,4 @@ elif clean_people in ['5人', '5 人']:
     else:
         st.text("条件に合致する 5 人グループが見つかりませんでした。")
 else:
+    st.text("6人以上には対応していません")
