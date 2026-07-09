@@ -19,6 +19,8 @@ st.title("プロフィール")
 with st.form("input_form"):
 
     sex = st.selectbox('マッチしたい性別を選択', ['男', '女','両方'])
+    agemin=st.selectbox(マッチ相手の年齢の最小値,range(20,55))
+    agemax=st.selectbox(マッチ相手の年齢の最大値,range(20,55))
     people=st.selectbox('何人で遊びたいかを選択',['3人','4人','5人'])
     day = st.selectbox('希望日を選択', ['6/7', '6/8','6/9'])
     time = st.selectbox('希望時間を選択', ['昼', '夜'])
@@ -73,7 +75,7 @@ if (sex=='両方'):
     y_df=result1_df
 else:
     y_df=result0_df
-d_df=y_df.copy()
+d_df=(y_df[(y_df['年齢']>=agemin)&((y_df['年齢']<=agemax))])
 
 # 各MBTIの人数をカウントする
 mbti_counts = d_df['MBTI'].value_counts()
