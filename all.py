@@ -151,6 +151,10 @@ else:
     bbq=24
 print(bbq) 
 
+y_df
+q_df
+
+
 
 y_df['相手への評価'] = 0
 for i in range(y_df.shape[0]):
