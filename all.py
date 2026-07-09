@@ -638,7 +638,7 @@ def process_clique_matching_5ppl(kid_df, g_df, mbti_df, start_node=0):
 # セレクトボックスの値に空白があっても判定できるように .strip() を適用
 clean_people = people.strip()
 
-if clean_people in ['3人', '3 人']:
+if clean_people in ['3人', '3人']:
     result = process_matching_and_get_details(g_df, mbti_df, data23, start_node=0)
     if result is not None:
         a, b, detail_a, detail_b = result
@@ -651,7 +651,7 @@ if clean_people in ['3人', '3 人']:
     else:
         st.text("マッチング条件に合うユーザーが見つかりませんでした。")
 
-elif clean_people in ['4人', '4 人']:
+elif clean_people in ['4人','4人']:
     clique_result = process_clique_matching_4ppl(kid_df, g_df, mbti_df, start_node=0)
     if clique_result is not None:
         a, b, c, detail_a, detail_b, detail_c = clique_result
@@ -667,7 +667,7 @@ elif clean_people in ['4人', '4 人']:
     else:
         st.text("条件に合致する 4 人グループが見つかりませんでした。")
 
-elif clean_people in ['5人', '5 人']:
+elif clean_people in ['5人', '5人']:
     clique_5_result = process_clique_matching_5ppl(kid_df, g_df, mbti_df, start_node=0)
     if clique_5_result is not None:
         a, b, c, d, detail_a, detail_b, detail_c, detail_d = clique_5_result
