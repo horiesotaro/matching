@@ -66,7 +66,8 @@ def orientation(a,tension,idea,judge,plan):
 
 
 # In[85]:
-
+minage=int(agemin)
+maxage=int(agemax)
 
 result0_df=(mbti_df[(mbti_df['性別'] == sex)&(mbti_df['希望日'] == day)&((mbti_df['希望時間'] == time))])
 result1_df=(mbti_df[(mbti_df['希望日'] == day)&((mbti_df['希望時間'] == time))])
@@ -75,7 +76,7 @@ if (sex=='両方'):
     y_df=result1_df
 else:
     y_df=result0_df
-d_df=(y_df[(y_df['年齢']>=agemin)&((y_df['年齢']<=agemax))])
+d_df=(y_df[(y_df['年齢']>=minage)&((y_df['年齢']<=maxage))])
 
 # 各MBTIの人数をカウントする
 mbti_counts = d_df['MBTI'].value_counts()
