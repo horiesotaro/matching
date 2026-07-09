@@ -155,9 +155,17 @@ y_df['相手への評価'] = 0
 for i in range(y_df.shape[0]):
     #print(y_df.iloc[i,3])
     mbti2 = y_df.iloc[i,4]
-    y_df.iloc[i,9]=q_df[q_df['MBTI'] == mbti2].loc[:,'相手への評価'].values[0]
-s_df=y_df.copy()
-
+       # 1. まず条件に合うデータを絞り込む
+    filtered_df = q_df[q_df['MBTI'] == mbti2]
+    
+    # 2. データが空っぽ（件数が0）じゃないか確認する
+    if not filtered_df.empty:
+        # データがあれば、今まで通り一番最初の値を入れる
+        y_df.iloc[i, 9] = filtered_df.loc[:, '相手への評価'].values[0]
+    else:
+        # データがなかった場合は、とりあえず 0 を入れておく（あるいは別のデフォルト値）
+        y_df.iloc[i, 9] = 0
+    # --- ここまで修正 ---
 # In[90]:
 
 
