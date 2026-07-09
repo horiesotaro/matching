@@ -19,8 +19,8 @@ st.title("プロフィール")
 with st.form("input_form"):
 
     sex = st.selectbox('マッチしたい性別を選択', ['男', '女','両方'])
-    agemin=st.selectbox(マッチ相手の年齢の最小値,range(20,55))
-    agemax=st.selectbox(マッチ相手の年齢の最大値,range(20,55))
+    agemin=st.selectbox('マッチ相手の年齢の最小値',range(20,55))
+    agemax=st.selectbox('マッチ相手の年齢の最大値',range(20,55))
     people=st.selectbox('何人で遊びたいかを選択',['3人','4人','5人'])
     day = st.selectbox('希望日を選択', ['6/7', '6/8','6/9'])
     time = st.selectbox('希望時間を選択', ['昼', '夜'])
