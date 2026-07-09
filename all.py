@@ -151,22 +151,16 @@ else:
     bbq=24
 print(bbq) 
 
+
 y_df['相手への評価'] = 0
 for i in range(y_df.shape[0]):
     #print(y_df.iloc[i,3])
     mbti2 = y_df.iloc[i,4]
-       # 1. まず条件に合うデータを絞り込む
-    filtered_df = q_df[q_df['MBTI'] == mbti2]
-    
-    # 2. データが空っぽ（件数が0）じゃないか確認する
-    if not filtered_df.empty:
-        # データがあれば、今まで通り一番最初の値を入れる
-        y_df.iloc[i, 9] = filtered_df.loc[:, '相手への評価'].values[0]
-    else:
-        # データがなかった場合は、とりあえず 0 を入れておく（あるいは別のデフォルト値）
-        y_df.iloc[i, 9] = 0
-    s_df=y_df.copy()
-# In[90]:
+    y_df.iloc[i,9]=q_df[q_df['MBTI'] == mbti2].loc[:,'相手への評価'].values[0]
+s_df=y_df.copy()
+s_df
+
+
 
 
 user0 = pd.DataFrame([[sex, day, time, minage,mbti, tension,idea,judge,plan,0]], columns =['性別','希望日','希望時間','年齢','MBTI', 'EI', 'SN', 'TF', 'PJ', '相手への評価'])
