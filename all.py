@@ -151,15 +151,12 @@ else:
     bbq=24
 print(bbq) 
 
-
-d_df['相手への評価'] = 0
-for i in range(d_df.shape[0]):
-    #print(d_df.iloc[i,4])
-    mbti2 = d_df.iloc[i,4]
-    d_df.iloc[i,9]=q_df[q_df['MBTI'] == mbti2].loc[:,'相手への評価'].values[0]
-s_df=d_df.copy()
-
-
+y_df['相手への評価'] = 0
+for i in range(y_df.shape[0]):
+    #print(y_df.iloc[i,3])
+    mbti2 = y_df.iloc[i,4]
+    y_df.iloc[i,9]=q_df[q_df['MBTI'] == mbti2].loc[:,'相手への評価'].values[0]
+s_df=y_df.copy()
 
 # In[90]:
 
