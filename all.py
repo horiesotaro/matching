@@ -155,8 +155,8 @@ print(bbq)
 y_df['相手への評価'] = 0
 for i in range(y_df.shape[0]):
     #print(y_df.iloc[i,3])
-    mbti2 = y_df.iloc[i,3]
-    y_df.iloc[i,8]=q_df[q_df['MBTI'] == mbti2].loc[:,'相手への評価'].values[0]
+    mbti2 = y_df.iloc[i,4]
+    y_df.iloc[i,9]=q_df[q_df['MBTI'] == mbti2].loc[:,'相手への評価'].values[0]
 s_df=y_df.copy()
 
 
@@ -164,19 +164,19 @@ s_df=y_df.copy()
 # In[90]:
 
 
-user0 = pd.DataFrame([[sex, day, time, mbti, tension,idea,judge,plan,0]], columns =['性別','希望日','希望時間','MBTI', 'EI', 'SN', 'TF', 'PJ', '相手への評価'])
+user0 = pd.DataFrame([[sex, day, time, minage,mbti, tension,idea,judge,plan,0]], columns =['性別','希望日','希望時間','年齢','MBTI', 'EI', 'SN', 'TF', 'PJ', '相手への評価'])
 s_df = pd.concat([user0,s_df])
 for i in range(1,len(s_df.index)):
-    p_a,p_tension,p_idea,p_judge,p_plan = s_df.iloc[i,3:8]
+    p_a,p_tension,p_idea,p_judge,p_plan = s_df.iloc[i,4:9]
     # print(p_a,p_tension,p_idea,p_judge,p_plan)
     p_e,p_i,p_n,p_s,p_f,p_t,p_j,p_p = orientation(p_a,p_tension,p_idea,p_judge,p_plan)
     p_e_df = scoring(p_e,p_i,p_n,p_s,p_f,p_t,p_j,p_p)
     s_df['相手からの評価'+str(i+1)] = 0
     for j in range(len(s_df.index)):
         if i == j:
-            s_df.iloc[j,i+8] = 0
+            s_df.iloc[j,i+9] = 0
         else:
-            s_df.iloc[j,i+8] = p_e_df[x_df.index(s_df.iloc[j,3])]
+            s_df.iloc[j,i+9] = p_e_df[x_df.index(s_df.iloc[j,4])]
             
 
 
