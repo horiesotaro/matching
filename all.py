@@ -165,7 +165,7 @@ for i in range(y_df.shape[0]):
     else:
         # データがなかった場合は、とりあえず 0 を入れておく（あるいは別のデフォルト値）
         y_df.iloc[i, 9] = 0
-    # --- ここまで修正 ---
+    s_df=y_df.copy()
 # In[90]:
 
 
