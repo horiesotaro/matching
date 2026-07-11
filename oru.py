@@ -155,17 +155,12 @@ print(bbq)
 
 y_df['相手への評価'] = 0
 for i in range(y_df.shape[0]):
-    mbti2 = y_df.iloc[i, 4]
-    if 'MBTI' in y_df.columns:
-        filtered_df = y_df[y_df['MBTI'] == mbti2]
-        if not filtered_df.empty and '相手への評価' in filtered_df.columns:
-            y_df.iloc[i, 9] = filtered_df.loc[:, '相手への評価'].values[0]
-        else:
-            y_df.iloc[i, 9] = 0
-    else:
-            # もし 'MBTI' 列がない場合は、安全に 0 を入れておく
-        y_df.iloc[i, 9] = 0
-s_df = y_df.copy()
+    #print(y_df.iloc[i,3])
+    mbti2 = y_df.iloc[i,4]
+    y_df.iloc[i,9]=q_df[q_df['MBTI'] == mbti2].loc[:,'相手への評価'].values[0]
+    # val = q_df.loc[q_df['MBTI'] == mbti2,'相手への評価']
+    # y_df.iloc[i,9]= val
+s_df=y_df.copy()
 
 
 
@@ -183,45 +178,19 @@ s_df = y_df.copy()
 
 user0 = pd.DataFrame([[sex, day, time, minage,mbti, tension,idea,judge,plan,0]], columns =['性別','希望日','希望時間','年齢','MBTI', 'EI', 'SN', 'TF', 'PJ', '相手への評価'])
 s_df = pd.concat([user0,s_df])
-new_columns={}
-num_users=len(s_df.index)
-
-for i in range(1,num_users):
+for i in range(1,len(s_df.index)):
     p_a,p_tension,p_idea,p_judge,p_plan = s_df.iloc[i,4:9]
     # print(p_a,p_tension,p_idea,p_judge,p_plan)
-    p_e,p_i,p_n,p_s,p_f,p_t,p_j,p_p = orientation(p_a,p_tension,p_idea,p_judge,p_plan)
-    p_e_df = scoring(p_e,p_i,p_n,p_s,p_f,p_t,p_j,p_p)
-    col_name='相手からの評価'+str(i+1)
-    col_values=[0]*num_users
-    #s_df['相手からの評価'+str(i+1)] = 0
-    for j in range(num_users):
+    p_e,p_i,p_n,p_s,p_t,p_f,p_p,p_j = orientation(p_a,p_tension,p_idea,p_judge,p_plan)
+    p_e_df = scoring( p_e,p_i,p_n,p_s,p_t,p_f,p_p,p_j)
+    s_df['相手からの評価'+str(i+1)] = 0
+    for j in range(len(s_df.index)):
         if i == j:
-            col_values[j]=0
-            #s_df.iloc[j,i+9] = 0
+            s_df.iloc[j,i+9] = 0
         else:
-            search_val=s_df.iloc[j,4]
-            if search_val in x_df:
-                col_values[j]=p_e_df[x_df.index(search_val)]
-            else:
-                col_values[j]=0
-    new_columns[col_name]=col_values
-            #s_df.iloc[j,i+9] = p_e_df[x_df.index(s_df.iloc[j,4])]
-new_cols_df=pd.DataFrame(new_columns)
-s_df=pd.concat([s_df,new_cols_df],axis=1)
+            s_df.iloc[j,i+9] = p_e_df[x_df.index(s_df.iloc[j,4])]
 
-# In[91]:
-
-
-#g_df=s_df.iloc[0:,8:]
-n_users=len(s_df)
-g_df=s_df.iloc[0:n_users,0:n_users]
-
-# In[92]:
-
-
-
-
-# In[93]:
+g_df=s_df.iloc[0:,9:]
 
 
 import numpy as np
@@ -287,7 +256,6 @@ for x in range(n):
 kid_df = df.where(mask, 0)
 kid_df
 
-
 # 1. 元のデータフレームをコピーしてベースを作成
 new_df = kid_df.copy()
 
@@ -315,6 +283,7 @@ else:
     # --- max(aaa)が28以上の時 ---
     # 全ての行列で28未満の数字に "x"
     new_df = new_df.mask(new_df < 28, "x")
+
 
 
 data23 = np.empty((0,1))
