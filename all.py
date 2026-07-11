@@ -288,6 +288,8 @@ else:
     # 全ての行列で28未満の数字に "x"
     new_df = new_df.mask(new_df < 28, "x")
 
+new_df
+
 data23 = np.empty((0,1))
 for j in range(len(new_df.index)):
     v3_df=new_df.iloc[0:,j:j+1]
