@@ -153,19 +153,30 @@ else:
     bbq=24
 print(bbq) 
 
-y_df
-q_df
-
-
-
 y_df['相手への評価'] = 0
 for i in range(y_df.shape[0]):
+    mbti2 = y_df.iloc[i, 4]
+    if 'MBTI' in y_df.columns:
+        filtered_df = y_df[y_df['MBTI'] == mbti2]
+        if not filtered_df.empty and '相手への評価' in filtered_df.columns:
+            y_df.iloc[i, 9] = filtered_df.loc[:, '相手への評価'].values[0]
+        else:
+            y_df.iloc[i, 9] = 0
+    else:
+            # もし 'MBTI' 列がない場合は、安全に 0 を入れておく
+        y_df.iloc[i, 9] = 0
+s_df = y_df.copy()
+
+
+
+#y_df['相手への評価'] = 0
+#for i in range(y_df.shape[0]):
     #print(y_df.iloc[i,3])
-    mbti2 = y_df.iloc[i,4]
-    fil_df=y_df[y_df['MBTI'] == mbti2]
+ #   mbti2 = y_df.iloc[i,4]
+  #  fil_df=y_df[y_df['MBTI'] == mbti2]
     #y_df.iloc[i,9]=q_df[q_df['MBTI'] == mbti2].loc[:,'相手への評価'].values[0]
-s_df=y_df.copy()
-s_df
+#s_df=y_df.copy()
+#s_df
 
 
 
