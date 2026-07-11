@@ -226,8 +226,10 @@ num_cols=len(df.columns)
 for x in range(n):
     for y in range(num_cols):
         if x != y:
-            a = df.iloc[x, y]
-            b = df.iloc[y, x]
+            a1 = df.iloc[x, y]
+            a=int(a1)
+            b1 = df.iloc[y, x]
+            b=int(b1)
 
             if(max(aaa)>=28):
                 # 1行目（x=0）または1列目（y=0）が絡む場合
