@@ -254,7 +254,6 @@ for x in range(n):
 
 # 条件を満たす部分だけ残す
 kid_df = df.where(mask, 0)
-kid_df
 
 # 1. 元のデータフレームをコピーしてベースを作成
 new_df = kid_df.copy()
