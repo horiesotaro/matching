@@ -233,7 +233,7 @@ for x in range(n):
                 # 1行目（x=0）または1列目（y=0）が絡む場合
                 if y == 0:
                 # 一方が24以上、もう一方が（bbq）以上なら残す
-                    if (a >= 28 and b >= bbq):
+                    if (a >= 28 and b >= bbq_num):
                         mask.iloc[x, y] = True
                         mask.iloc[y, x] = True
                 elif x == 0:
