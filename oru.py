@@ -119,6 +119,8 @@ for i in range(16):
         datacd.append(x_df[i])
 impo=len(datacd)
 
+q_df.columns
+
 # 1. まずd_dfからMBTIの人数を集計してデータフレームにする
 mbti_counts = d_df['MBTI'].value_counts().reset_index()
 mbti_counts.columns = ['MBTI', '人数']
