@@ -304,43 +304,56 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 
-# ====================================================
-# 【確定版】3人マッチング用関数
-# ====================================================
+from itertools import product
+from itertools import product, combinations
+import networkx as nx
+import pandas as pd
+import numpy as np
+import streamlit as st
+
+
 def process_matching_and_get_details(g_df, mbti_df, data23, start_node=0):
     user_id = g_df.index
     node_list = user_id.to_list()
     
-    edge_list = [(x, y) for x, y in product(node_list, node_list) if x != y]
+    edge_list = [(x, y) for x, y in product(node_list, node_list)]
     
-    datax = []
-    datay_temp = []
-    for i in range(min(len(data23), len(edge_list))):
-        if data23[i] == "x":
-            datay_temp.append(edge_list[i])
+    datax=[]
+    datay=[]
+    for i in range(len(data23)):
+        if data23[i]==("x"):
+            datay.append(edge_list[i])
         else:
             datax.append(edge_list[i])
             
     G = nx.DiGraph()
     G.add_nodes_from(node_list)
     G.add_edges_from(datax)
+    nx.draw(G, with_labels = True)
+    plt.show()
     
-    ab = dict(enumerate(nx.bfs_layers(G, [start_node])))
-    ad = ab.get(1, [])
-    ac = ab.get(2, [])
+    ab = dict(enumerate(nx.bfs_layers(G, [0])))
+    ac=ab[2]
+    ad=ab[1]
+    if(len(ab)==4):
+        ae=ab[3]
     
-    datav = []
-    for n in ac:
-        neighbor = list(G[n].keys())
-        if start_node in neighbor:
-            datav.append(n)
-            
-    datay = []
+    datayy=[]
     for m in ad:
-        neighbor1 = list(G[m].keys())
-        for n in neighbor1:
-            if n in datav:
-                datay.append((start_node, m, n))
+        neighbor1=list(G[m].keys())
+        
+    datav=[]
+    for n in ac:
+        neighbor=list(G[n].keys())
+        if 0 in neighbor:
+            datav.append(n)
+    datay=[]
+    for m in ad:
+        neighbor1=list(G[m].keys())
+        for k in neighbor1:
+            if k in datav:
+                datay.append((0,m,k))
+
                 
     datap = set()
     for m in ad:
@@ -348,23 +361,34 @@ def process_matching_and_get_details(g_df, mbti_df, data23, start_node=0):
             neighbor1 = list(G[m].keys())
             neighbor2 = list(G[n].keys())
             if (m != n) and (m in neighbor2) and (n in neighbor1):
-                datap.add((start_node, min(m, n), max(m, n)))
+                datap.add((0, min(m, n), max(m, n)))
+
+    datap=list(datap)
                 
-    datavv = datay + list(datap)
-    
-    if not datavv:
-        return None
-        
-    id2pos = {id_val: pos for pos, id_val in enumerate(g_df.index)}
-    
-    dataq = []
+    datavv =datay+list(datap)
+
+    id2pos = {}
+    for pos, id, in enumerate(g_df.index):
+        id2pos[id] = pos
+
+    dataq=[]
+    datar=[]
     for g in datavv:
-        for i, j in product(range(3), range(3)):
+        for i,j in product(range(3),range(3)):
             if i != j:
-                dataq.append(g_df.iat[id2pos[g[i]], id2pos[g[j]]])
-                
-    n = 6
-    datar = [dataq[c:c+n] for c in range(0, len(dataq), n)]
+                dataq.append(g_df.iat[id2pos[g[i]],id2pos[g[j]]])
+    n=6
+    for c in range(0,len(dataq),n):
+        datar.append(dataq[c:c+n])
+
+
+
+    datai=[]
+    for i in range(0,len(datar)):
+        datai.append(sum(datar[i]))
+
+
+
     
     o1_df = pd.DataFrame(datavv, columns=['あなた', 'user1', 'user2'])
     o2_df = pd.DataFrame(datar, columns=[
@@ -373,27 +397,38 @@ def process_matching_and_get_details(g_df, mbti_df, data23, start_node=0):
         'あなたから user2 への評価', 'user1 から user2 への評価'
     ])
     o_df = pd.concat([o1_df, o2_df], axis=1)
-    
-    eval_values = o_df.iloc[:, 3:9].values
-    o_df['合計'] = np.sum(eval_values, axis=1)
-    o_df['分散'] = np.var(eval_values, axis=1)
-    o_df['優劣値'] = o_df['合計'] - o_df['分散']
-    
-    fin_df = o_df.sort_values('優劣値', ascending=False).copy()
+
+
+    o_df['合計'] = 0
+    o_df['分散'] = 0
+    o_df['優劣値'] = 0
+    o_df["分散"] = o_df["分散"].astype(float)
+    o_df["優劣値"] = o_df["優劣値"].astype(float)
+    for i in range(o_df.shape[0]):
+        x = o_df.iloc[i,3:9].values
+        o_df.iloc[i,9] = np.sum(x)
+        o_df.iloc[i,10] = np.var(x)
+        o_df.iloc[i,11] = (np.sum(x)-np.var(x))
+    fin_df=o_df.sort_values('優劣値',ascending=False)
     user_cols = ["user1", "user2"]
     fin_df["group_key"] = fin_df[user_cols].apply(lambda x: tuple(sorted(x)), axis=1)
-    fin_df = fin_df.drop_duplicates(subset="group_key").drop(columns="group_key")
-    
+    fin_df = fin_df.drop_duplicates(subset="group_key")
+    fin_df = fin_df.drop(columns="group_key")
+
+
     used_nums = set()
     selected_indices = []
+    target_cols = ['user1', 'user2']
+    
     for idx, row in fin_df.iterrows():
-        current_values = set(row[user_cols].values)
-        current_values.discard(start_node)
+        current_values = set(row[target_cols].values)
+        current_values.discard(0)
         if not (current_values & used_nums):
             selected_indices.append(idx)
             used_nums.update(current_values)
-            
     unique_rows0_df = fin_df.loc[selected_indices]
+    
+    
     if unique_rows0_df.empty:
         return None
         
@@ -401,8 +436,9 @@ def process_matching_and_get_details(g_df, mbti_df, data23, start_node=0):
     user1_id = best_match['user1']
     user2_id = best_match['user2']
     
-    user1_details = mbti_df.iloc[int(user1_id) - 1, 0:]
-    user2_details = mbti_df.iloc[int(user2_id) - 1, 0:]
+    user1_details = mbti_df.iloc[int(user1_id) - 1, 0:5]
+    user2_details = mbti_df.iloc[int(user2_id) - 1, 0:5]
+    unique_rows0_df=fin_df.loc[selected_indices]
     return user1_id, user2_id, user1_details, user2_details
 
 
