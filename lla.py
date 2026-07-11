@@ -187,7 +187,7 @@ for i in range(1,num_users):
         else:
             search_val=s_df.iloc[j,4]
             if search_val in x_df:
-                col_values[j]=p_e_df[x_df.index(search_val)
+                col_values[j]=p_e_df[x_df.index(search_val)]
             else:
                 col_values[j]=0
     new_columns[col_name]=col_values
