@@ -170,7 +170,7 @@ s_df
 user0 = pd.DataFrame([[sex, day, time, minage,mbti, tension,idea,judge,plan,0]], columns =['性別','希望日','希望時間','年齢','MBTI', 'EI', 'SN', 'TF', 'PJ', '相手への評価'])
 s_df = pd.concat([user0,s_df])
 new_columns={}
-num_users=lin(s_df.index)
+num_users=len(s_df.index)
 
 for i in range(1,num_users):
     p_a,p_tension,p_idea,p_judge,p_plan = s_df.iloc[i,4:9]
