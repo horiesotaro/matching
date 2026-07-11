@@ -218,6 +218,7 @@ df = g_df.copy()
 # 空のマスク（全部False）
 mask = pd.DataFrame(False, index=df.index, columns=df.columns)
 
+bbq_num=int(bbq)
 
 n = len(df)
 num_cols=len(df.columns)
@@ -236,7 +237,7 @@ for x in range(n):
                         mask.iloc[x, y] = True
                         mask.iloc[y, x] = True
                 elif x == 0:
-                    if (b >= 28 and a >= bbq):
+                    if (b >= 28 and a >= bbq_num):
                         mask.iloc[x, y] = True
                         mask.iloc[y, x] = True
                 
