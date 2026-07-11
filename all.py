@@ -169,19 +169,31 @@ s_df
 
 user0 = pd.DataFrame([[sex, day, time, minage,mbti, tension,idea,judge,plan,0]], columns =['性別','希望日','希望時間','年齢','MBTI', 'EI', 'SN', 'TF', 'PJ', '相手への評価'])
 s_df = pd.concat([user0,s_df])
-for i in range(1,len(s_df.index)):
+new_columns={}
+num_users=lin(s_df.index)
+
+for i in range(1,num_users):
     p_a,p_tension,p_idea,p_judge,p_plan = s_df.iloc[i,4:9]
     # print(p_a,p_tension,p_idea,p_judge,p_plan)
     p_e,p_i,p_n,p_s,p_f,p_t,p_j,p_p = orientation(p_a,p_tension,p_idea,p_judge,p_plan)
     p_e_df = scoring(p_e,p_i,p_n,p_s,p_f,p_t,p_j,p_p)
-    s_df['相手からの評価'+str(i+1)] = 0
-    for j in range(len(s_df.index)):
+    col_name='相手からの評価'+str(i+1)
+    col_values=[0]*num_users
+    #s_df['相手からの評価'+str(i+1)] = 0
+    for j in range(num_users):
         if i == j:
-            s_df.iloc[j,i+9] = 0
+            col_values[j]=0
+            #s_df.iloc[j,i+9] = 0
         else:
-            s_df.iloc[j,i+9] = p_e_df[x_df.index(s_df.iloc[j,4])]
-            
-
+            search_val=s_df.iloc[j,4]
+            if search_val in x_df:
+                col_values[j]=p_e_df[x_df.index(search_val)
+            else:
+                col_values[j]=0
+    new_columns[col_name]=col_values
+            #s_df.iloc[j,i+9] = p_e_df[x_df.index(s_df.iloc[j,4])]
+new_cols_df=pd.DataFrame(new_columns)
+s_df=pd.concat([s_df,new_cols_df],axis=1)
 
 # In[91]:
 
