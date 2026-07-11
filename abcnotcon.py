@@ -76,7 +76,9 @@ if (sex=='両方'):
     y_df=result1_df
 else:
     y_df=result0_df
-d_df=(y_df[(y_df['年齢']>=minage)&((y_df['年齢']<=maxage))])
+
+y_df=(y_df[(y_df['年齢']>=minage)&((y_df['年齢']<=maxage))])
+d_df=y_df
 
 # 各MBTIの人数をカウントする
 mbti_counts = d_df['MBTI'].value_counts()
