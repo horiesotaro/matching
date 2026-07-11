@@ -198,8 +198,9 @@ s_df=pd.concat([s_df,new_cols_df],axis=1)
 # In[91]:
 
 
-g_df=s_df.iloc[0:,8:]
-
+#g_df=s_df.iloc[0:,8:]
+n_users=len(s_df)
+g_df=s_df.iloc[0:n_users,0:n_users]
 
 # In[92]:
 
