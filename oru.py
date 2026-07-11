@@ -401,8 +401,8 @@ def process_matching_and_get_details(g_df, mbti_df, data23, start_node=0):
     user1_id = best_match['user1']
     user2_id = best_match['user2']
     
-    user1_details = mbti_df.iloc[int(user1_id) - 1, 0:4]
-    user2_details = mbti_df.iloc[int(user2_id) - 1, 0:4]
+    user1_details = mbti_df.iloc[int(user1_id) - 1, 0:]
+    user2_details = mbti_df.iloc[int(user2_id) - 1, 0:]
     return user1_id, user2_id, user1_details, user2_details
 
 
