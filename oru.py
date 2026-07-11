@@ -232,28 +232,24 @@ df = g_df.copy()
 # 空のマスク（全部False）
 mask = pd.DataFrame(False, index=df.index, columns=df.columns)
 
-bbq_num=int(bbq)
 
 n = len(df)
-num_cols=len(df.columns)
 
 for x in range(n):
-    for y in range(num_cols):
+    for y in range(n):
         if x != y:
             a = df.iloc[x, y]
-            
             b = df.iloc[y, x]
-          
 
             if(max(aaa)>=28):
                 # 1行目（x=0）または1列目（y=0）が絡む場合
                 if y == 0:
                 # 一方が24以上、もう一方が（bbq）以上なら残す
-                    if (a >= 28 and b >= bbq_num):
+                    if (a >= 28 and b >= bbq):
                         mask.iloc[x, y] = True
                         mask.iloc[y, x] = True
                 elif x == 0:
-                    if (b >= 28 and a >= bbq_num):
+                    if (b >= 28 and a >= bbq):
                         mask.iloc[x, y] = True
                         mask.iloc[y, x] = True
                 
@@ -289,6 +285,7 @@ for x in range(n):
 
 # 条件を満たす部分だけ残す
 kid_df = df.where(mask, 0)
+kid_df
 
 
 # 1. 元のデータフレームをコピーしてベースを作成
