@@ -219,9 +219,10 @@ mask = pd.DataFrame(False, index=df.index, columns=df.columns)
 
 
 n = len(df)
+num_cols=len(df.columns)
 
 for x in range(n):
-    for y in range(n):
+    for y in range(num_cols):
         if x != y:
             a = df.iloc[x, y]
             b = df.iloc[y, x]
